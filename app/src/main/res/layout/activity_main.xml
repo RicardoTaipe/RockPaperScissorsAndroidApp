@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient_background"
-    android:padding="16dp"
+    android:padding="24dp"
     tools:context=".MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,6 +20,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/barlow_semi_condensed_bold"
             android:text="ROCK\nPAPER\nSCISSORS"
+            android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -47,51 +48,75 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+
+    <ImageView
+        android:id="@+id/triangle_iv"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_triangle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintWidth_percent="0.5" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:src="@drawable/bg_triangle"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/paper_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        android:focusable="?attr/selectableItemBackground"
+        android:padding="4dp"
+        android:src="@drawable/icon_paper"
+        app:contentPadding="32dp"
+        app:layout_constraintBottom_toTopOf="@+id/triangle_iv"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@+id/triangle_iv"
+        app:layout_constraintStart_toStartOf="@+id/triangle_iv"
+        app:layout_constraintTop_toTopOf="@+id/triangle_iv"
+        app:shapeAppearanceOverlay="@style/Circular"
+        app:strokeColor="@color/light_blue_600"
+        app:strokeWidth="8dp" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:src="@drawable/icon_paper"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:src="@drawable/icon_scissors"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:src="@drawable/icon_paper"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/scissors_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        android:focusable="?attr/selectableItemBackgroundBorderless"
+        android:padding="4dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/icon_scissors"
+        app:contentPadding="32dp"
+        app:layout_constraintBottom_toTopOf="@+id/triangle_iv"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="@+id/triangle_iv"
+        app:layout_constraintStart_toEndOf="@+id/triangle_iv"
+        app:layout_constraintTop_toTopOf="@+id/triangle_iv"
+        app:shapeAppearanceOverlay="@style/Circular"
+        app:strokeColor="@color/light_blue_400"
+        app:strokeWidth="8dp" />
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/rock_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        android:padding="4dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/icon_rock"
+        app:contentPadding="32dp"
+        app:layout_constraintBottom_toBottomOf="@+id/triangle_iv"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/triangle_iv"
+        app:shapeAppearanceOverlay="@style/Circular"
+        app:strokeColor="@color/light_blue_600"
+        app:strokeWidth="8dp" />
 
     <com.google.android.material.button.MaterialButton
         style="?attr/materialButtonOutlinedStyle"
