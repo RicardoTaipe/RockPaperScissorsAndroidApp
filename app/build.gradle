@@ -9,12 +9,15 @@ android {
 
     defaultConfig {
         applicationId "com.example.rockpaperscissorsapp"
-        minSdk 21
+        minSdk 23
         targetSdk 33
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildFeatures {
+        dataBinding true
     }
 
     buildTypes {
