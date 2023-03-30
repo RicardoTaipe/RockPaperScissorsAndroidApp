@@ -8,21 +8,29 @@ class Game {
         SCISSORS
     }
 
+    enum class Result {
+        WIN,
+        DRAW,
+        LOSE
+    }
+
+    private lateinit var compChoice: Choice
     var score = 0
 
-    private fun randomChoice() = Choice.values().random()
+    fun randomChoice(): Choice {
+        compChoice = Choice.values().random()
+        return compChoice
+    }
 
-    fun play(userChoice: Choice): String {
-        val compChoice = randomChoice()
-        val winner = if ((userChoice.ordinal + 1) % 3 == compChoice.ordinal) {
-            score--
-            "$compChoice House win"
+    fun play(userChoice: Choice): Result {
+        return if ((userChoice.ordinal + 1) % 3 == compChoice.ordinal) {
+            if (score > 0) score--
+            Result.LOSE
         } else if (userChoice.ordinal == compChoice.ordinal) {
-            "$compChoice It's a draw"
+            Result.DRAW
         } else {
             score++
-            "$compChoice You win"
+            Result.WIN
         }
-        return winner
     }
 }

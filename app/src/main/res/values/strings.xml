@@ -8,4 +8,7 @@
     <string name="the_house_picked">THE HOUSE PICKED</string>
     <string name="play_again">PLAY AGAIN</string>
     <string name="you_win">YOU WIN</string>
+    <string name="you_lose">YOU LOSE</string>
+    <string name="draw">DRAW</string>
+
 </resources>

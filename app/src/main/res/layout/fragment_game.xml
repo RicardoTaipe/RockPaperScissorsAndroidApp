@@ -5,6 +5,10 @@
 
     <data>
 
+        <variable
+            name="viewModel"
+            type="com.example.rockpaperscissorsapp.model.GameViewModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -45,6 +49,7 @@
             android:layout_height="0dp"
             android:background="@drawable/bg_timer"
             android:gravity="center"
+            android:text="@{viewModel.counter}"
             android:textAlignment="center"
             android:textAppearance="?attr/textAppearanceHeadline4"
             android:textColor="@color/white"
@@ -66,7 +71,6 @@
             android:background="@drawable/bg_rock"
             android:scaleType="centerCrop"
             android:src="@drawable/icon_rock"
-            android:stateListAnimator="@animator/zoom_out"
             android:visibility="invisible"
             app:contentPadding="25dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -96,10 +100,12 @@
             android:text="@string/you_win"
             android:textAppearance="?attr/textAppearanceHeadline3"
             android:textColor="@color/white"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/play_again"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            tools:visibility="visible" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/play_again"
@@ -107,11 +113,13 @@
             android:layout_height="wrap_content"
             android:text="@string/play_again"
             android:textColor="#3b4363"
+            android:visibility="gone"
             app:backgroundTint="@color/white"
             app:layout_constraintEnd_toEndOf="@id/result"
             app:layout_constraintStart_toStartOf="@id/result"
             app:layout_constraintTop_toBottomOf="@id/result"
-            app:layout_constraintWidth_percent="0.45" />
+            app:layout_constraintWidth_percent="0.45"
+            tools:visibility="visible" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
