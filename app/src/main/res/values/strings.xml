@@ -3,4 +3,9 @@
     <string name="rules">RULES</string>
     <string name="logo">ROCK\nPAPER\nSCISSORS</string>
     <string name="score">SCORE</string>
+    <string name="triangle_bg">triangle_bg</string>
+    <string name="you_picked">YOU PICKED</string>
+    <string name="the_house_picked">THE HOUSE PICKED</string>
+    <string name="play_again">PLAY AGAIN</string>
+    <string name="you_win">YOU WIN</string>
 </resources>
