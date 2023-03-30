@@ -18,6 +18,9 @@ class MainActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         binding.viewModel = gameViewModel
         supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        binding.rulesButton.setOnClickListener {
+            RulesFragment().show(supportFragmentManager, RulesFragment.TAG)
+        }
     }
 
 }
