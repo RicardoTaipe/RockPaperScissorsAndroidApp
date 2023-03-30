@@ -15,6 +15,7 @@
         tools:context=".MainActivity">
 
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/scoreboard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardBackgroundColor="@android:color/transparent"
@@ -66,8 +67,8 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            tools:text="12"
-                            android:textAppearance="?attr/textAppearanceHeadline4" />
+                            android:textAppearance="?attr/textAppearanceHeadline4"
+                            tools:text="12" />
 
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -77,69 +78,20 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 
-
-        <ImageView
-            android:id="@+id/triangle_iv"
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/nav_host_fragment"
+            android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/bg_triangle"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
+            app:defaultNavHost="true"
+            app:layout_constraintBottom_toTopOf="@id/rules_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.5" />
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/paper_iv"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:background="@drawable/bg_paper"
-            android:src="@drawable/icon_paper"
-            android:stateListAnimator="@animator/zoom_out"
-            app:contentPadding="25dp"
-            app:layout_constraintBottom_toTopOf="@+id/triangle_iv"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toStartOf="@+id/triangle_iv"
-            app:layout_constraintStart_toStartOf="@+id/triangle_iv"
-            app:layout_constraintTop_toTopOf="@+id/triangle_iv"
-            app:shapeAppearanceOverlay="@style/Circular" />
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/scissors_iv"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:background="@drawable/bg_scissors"
-            android:scaleType="centerCrop"
-            android:src="@drawable/icon_scissors"
-            android:stateListAnimator="@animator/zoom_out"
-            app:contentPadding="25dp"
-            app:layout_constraintBottom_toTopOf="@+id/triangle_iv"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="@+id/triangle_iv"
-            app:layout_constraintStart_toEndOf="@+id/triangle_iv"
-            app:layout_constraintTop_toTopOf="@+id/triangle_iv"
-            app:shapeAppearanceOverlay="@style/Circular" />
-
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/rock_iv"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:background="@drawable/bg_rock"
-            android:scaleType="centerCrop"
-            android:src="@drawable/icon_rock"
-            android:stateListAnimator="@animator/zoom_out"
-            app:contentPadding="25dp"
-            app:layout_constraintBottom_toBottomOf="@+id/triangle_iv"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/triangle_iv"
-            app:shapeAppearanceOverlay="@style/Circular" />
+            app:layout_constraintTop_toBottomOf="@id/scoreboard"
+            app:navGraph="@navigation/nav_graph" />
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/rules_button"
             style="?attr/materialButtonOutlinedStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

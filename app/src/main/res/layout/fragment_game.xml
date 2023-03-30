@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:background="@drawable/gradient_background">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/user_choice"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:background="@drawable/bg_paper"
+            android:src="@drawable/icon_paper"
+            app:contentPadding="25dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@+id/timer"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.3"
+            app:shapeAppearanceOverlay="@style/Circular" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/you_picked"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="@id/user_choice"
+            app:layout_constraintStart_toStartOf="@id/user_choice"
+            app:layout_constraintTop_toBottomOf="@id/user_choice" />
+
+        <TextView
+            android:id="@+id/timer"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/bg_timer"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:textAppearance="?attr/textAppearanceHeadline4"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/user_choice"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.3"
+            app:layout_constraintWidth_percent="0.25"
+            tools:text="1" />
+
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/com_choice"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:background="@drawable/bg_rock"
+            android:scaleType="centerCrop"
+            android:src="@drawable/icon_rock"
+            android:stateListAnimator="@animator/zoom_out"
+            android:visibility="invisible"
+            app:contentPadding="25dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/user_choice"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.3"
+            app:shapeAppearanceOverlay="@style/Circular" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/the_house_picked"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="@id/com_choice"
+            app:layout_constraintStart_toStartOf="@id/com_choice"
+            app:layout_constraintTop_toBottomOf="@id/com_choice" />
+
+        <TextView
+            android:id="@+id/result"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:text="@string/you_win"
+            android:textAppearance="?attr/textAppearanceHeadline3"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toTopOf="@id/play_again"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/play_again"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/play_again"
+            android:textColor="#3b4363"
+            app:backgroundTint="@color/white"
+            app:layout_constraintEnd_toEndOf="@id/result"
+            app:layout_constraintStart_toStartOf="@id/result"
+            app:layout_constraintTop_toBottomOf="@id/result"
+            app:layout_constraintWidth_percent="0.45" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
