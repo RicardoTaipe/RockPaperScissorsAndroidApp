@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations.map
 import androidx.lifecycle.ViewModel
+import com.example.rockpaperscissorsapp.EspressoIdlingResource
 import com.example.rockpaperscissorsapp.Game
 
 class GameViewModel : ViewModel() {
@@ -44,6 +45,7 @@ class GameViewModel : ViewModel() {
                 _comChoice.value = game.randomChoice()
                 _result.value = game.play(_yourChoice.value!!)
                 _score.value = game.score
+                EspressoIdlingResource.decrement()
             }
         }
     }
@@ -51,6 +53,7 @@ class GameViewModel : ViewModel() {
     fun selectOption(option: Game.Choice) {
         _yourChoice.value = option
         timer.start()
+        EspressoIdlingResource.increment()
     }
 
     override fun onCleared() {
