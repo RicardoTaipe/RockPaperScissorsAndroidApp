@@ -64,7 +64,7 @@ class MainActivityTest {
         onView(
             withId(R.id.paper_iv)
         ).perform(click())
-        onView(withId(R.id.com_choice)).check(matches(isDisplayed()))
+        onView(withId(R.id.user_choice)).check(matches(isDisplayed()))
         onView(withId(R.id.com_choice)).check(matches(isDisplayed()))
         onView(withId(R.id.result)).check(matches(isDisplayed()))
     }
