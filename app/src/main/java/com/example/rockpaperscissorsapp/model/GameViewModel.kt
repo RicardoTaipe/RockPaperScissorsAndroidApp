@@ -65,6 +65,7 @@ class GameViewModel : ViewModel() {
         _yourChoice.value = null
         _comChoice.value = null
         _result.value = null
+        timer.cancel()
     }
 
 }

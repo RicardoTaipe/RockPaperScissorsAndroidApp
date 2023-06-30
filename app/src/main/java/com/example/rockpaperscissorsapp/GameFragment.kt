@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
@@ -17,6 +18,20 @@ import com.google.android.material.imageview.ShapeableImageView
 class GameFragment : Fragment() {
     private lateinit var binding: FragmentGameBinding
     private val gameViewModel: GameViewModel by activityViewModels()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requireActivity().onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    gameViewModel.resetGame()
+                    if (isEnabled) {
+                        isEnabled = false
+                        requireActivity().onBackPressedDispatcher.onBackPressed()
+                    }
+                }
+            })
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -76,10 +91,12 @@ class GameFragment : Fragment() {
                 drawable = R.drawable.bg_rock
                 image = R.drawable.icon_rock
             }
+
             Game.Choice.PAPER -> {
                 drawable = R.drawable.bg_paper
                 image = R.drawable.icon_paper
             }
+
             Game.Choice.SCISSORS -> {
                 drawable = R.drawable.bg_scissors
                 image = R.drawable.icon_scissors
