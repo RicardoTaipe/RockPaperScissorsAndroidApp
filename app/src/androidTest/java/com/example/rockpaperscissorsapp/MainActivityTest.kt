@@ -46,16 +46,18 @@ class MainActivityTest {
         onView(
             withId(R.id.rules_button)
         ).perform(click())
-
+        //rules fragment should be visible
         onView(withId(R.id.rules_image)).check(matches(isDisplayed()))
     }
 
     @Test
     fun whenRulesIsOpen_thenCloseIt() {
+        //open rules fragment
         onView(
             withId(R.id.rules_button)
         ).perform(click())
         onView(withId(R.id.close_button)).perform(click())
+        //verify rules fragment is closed
         onView(withId(R.id.rules_image)).check(doesNotExist())
     }
 
