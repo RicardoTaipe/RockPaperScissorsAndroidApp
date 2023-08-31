@@ -5,19 +5,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations.map
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.rockpaperscissorsapp.EspressoIdlingResource
 import com.example.rockpaperscissorsapp.Game
 
-class GameViewModel : ViewModel() {
-    companion object {
-        private const val ONE_SECOND = 1000L
-        private const val COUNTDOWN_TIME = 3000L
+private const val ONE_SECOND = 1000L
+private const val COUNTDOWN_TIME = 3000L
 
-    }
+class GameViewModel(private val game: Game) : ViewModel() {
 
     private val timer: CountDownTimer
-
-    private var game: Game = Game()
     private val _yourChoice = MutableLiveData<Game.Choice?>()
     val yourChoice: LiveData<Game.Choice?> = _yourChoice
     private val _comChoice = MutableLiveData<Game.Choice?>()
@@ -67,5 +65,14 @@ class GameViewModel : ViewModel() {
         _result.value = null
         timer.cancel()
     }
-
+    companion object {
+        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(
+                modelClass: Class<T>, extras: CreationExtras
+            ): T {
+                return GameViewModel(Game()) as T
+            }
+        }
+    }
 }

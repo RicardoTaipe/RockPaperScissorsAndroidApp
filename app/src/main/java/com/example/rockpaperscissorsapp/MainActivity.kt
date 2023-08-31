@@ -10,7 +10,7 @@ import com.example.rockpaperscissorsapp.model.GameViewModel
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private val gameViewModel by viewModels<GameViewModel>()
+    private val gameViewModel by viewModels<GameViewModel> { GameViewModel.Factory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
