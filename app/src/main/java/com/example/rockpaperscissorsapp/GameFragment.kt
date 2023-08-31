@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -55,8 +57,10 @@ class GameFragment : Fragment() {
         gameViewModel.comChoice.observe(viewLifecycleOwner) {
             it ?: return@observe
             setUiData(binding.comChoice, it)
-            binding.comChoice.visibility = View.VISIBLE
-            binding.timer.visibility = View.INVISIBLE
+            binding.run {
+                comChoice.isVisible = true
+                timer.isInvisible = true
+            }
 
         }
 
@@ -75,9 +79,9 @@ class GameFragment : Fragment() {
                         Game.Result.LOSE -> R.string.you_lose
                     }
                 )
-                visibility = View.VISIBLE
+                isVisible = true
             }
-            binding.playAgain.visibility = View.VISIBLE
+            binding.playAgain.isVisible = true
         }
     }
 
