@@ -9,13 +9,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.rockpaperscissorsapp.EspressoIdlingResource
 import com.example.rockpaperscissorsapp.Game
+import com.example.rockpaperscissorsapp.MyCountDownTimer
 
 private const val ONE_SECOND = 1000L
 private const val COUNTDOWN_TIME = 3000L
 
-class GameViewModel(private val game: Game) : ViewModel() {
-
-    private val timer: CountDownTimer
+class GameViewModel(private val game: Game, private val timer: MyCountDownTimer) :
+    ViewModel() {
+    //var timer: CountDownTimer
     private val _yourChoice = MutableLiveData<Game.Choice?>()
     val yourChoice: LiveData<Game.Choice?> = _yourChoice
     private val _comChoice = MutableLiveData<Game.Choice?>()
@@ -33,13 +34,12 @@ class GameViewModel(private val game: Game) : ViewModel() {
     }
 
     init {
-        timer = object : CountDownTimer(COUNTDOWN_TIME, ONE_SECOND) {
 
-            override fun onTick(millisUntilFinished: Long) {
+        timer.run {
+            onTickListener = { millisUntilFinished ->
                 _counter.value = ((millisUntilFinished + ONE_SECOND) / ONE_SECOND)
             }
-
-            override fun onFinish() {
+            onFinishListener = {
                 _comChoice.value = game.randomChoice()
                 _result.value = game.play(_yourChoice.value!!)
                 _score.value = game.score
@@ -65,13 +65,14 @@ class GameViewModel(private val game: Game) : ViewModel() {
         _result.value = null
         timer.cancel()
     }
+
     companion object {
         val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(
                 modelClass: Class<T>, extras: CreationExtras
             ): T {
-                return GameViewModel(Game()) as T
+                return GameViewModel(Game(), MyCountDownTimer(COUNTDOWN_TIME, ONE_SECOND)) as T
             }
         }
     }
