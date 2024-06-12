@@ -1,0 +1,9 @@
+<resources>
+    <declare-styleable name="Piece">
+        <attr name="shape" format="enum">
+            <enum name="ROCK" value="0" />
+            <enum name="PAPER" value="1" />
+            <enum name="SCISSORS" value="2" />
+        </attr>
+    </declare-styleable>
+</resources>

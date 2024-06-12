@@ -1,7 +1,16 @@
 <resources>
 
-    <style name="Widget.Theme.RockPaperScissorsApp.MyView" parent="">
-        <item name="android:background">@color/gray_400</item>
-        <item name="exampleColor">@color/light_blue_400</item>
+    <style name="Widget.Theme.RockPaperScissorsApp.Piece" parent="Widget.MaterialComponents.ShapeableImageView">
+        <!-- Especificar el padding del contenido -->
+        <item name="contentPadding">25dp</item>
+
+        <!-- Especificar la apariencia de la forma del ImageView -->
+        <item name="shapeAppearanceOverlay">@style/ImageViewShapeAppearance</item>
+    </style>
+
+    <!-- Definir un estilo para la apariencia de la forma del ImageView -->
+    <style name="ImageViewShapeAppearance">
+        <!-- Aquí puedes configurar la forma como desees -->
+        <item name="cornerSize">50%</item>
     </style>
 </resources>

@@ -1,4 +1,4 @@
-package com.example.rockpaperscissorsapp
+package com.example.rockpaperscissorsapp.rules
 
 import android.app.Dialog
 import android.os.Bundle
