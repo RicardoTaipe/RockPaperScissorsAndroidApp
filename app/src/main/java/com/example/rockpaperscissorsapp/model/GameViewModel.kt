@@ -1,11 +1,10 @@
 package com.example.rockpaperscissorsapp.model
 
-import android.os.CountDownTimer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations.map
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.map
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.rockpaperscissorsapp.EspressoIdlingResource
 import com.example.rockpaperscissorsapp.Game
@@ -25,11 +24,11 @@ class GameViewModel(private val game: Game, private val timer: MyCountDownTimer)
     val result: LiveData<Game.Result?> = _result
 
     private val _score = MutableLiveData(0)
-    val score = map(_score) {
+    val score = _score.map {
         it.toString()
     }
     private val _counter = MutableLiveData<Long>()
-    val counter = map(_counter) {
+    val counter = _counter.map {
         it.toString()
     }
 
