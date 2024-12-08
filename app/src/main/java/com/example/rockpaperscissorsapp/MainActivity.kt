@@ -26,6 +26,7 @@ class MainActivity : ComponentActivity() {
 //            RulesFragment().show(supportFragmentManager, RulesFragment.TAG)
 //        }
         installSplashScreen()
+        enableEdgeToEdge()
         setContent {
             RulesScreen()
         }

@@ -28,7 +28,7 @@ class MainActivityTest {
     @Before
     fun registerIdlingResource() {
         IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
-        dataBindingIdlingResource.monitorActivity(mActivityScenarioRule.scenario)
+        //dataBindingIdlingResource.monitorActivity(mActivityScenarioRule.scenario)
         IdlingRegistry.getInstance().register(dataBindingIdlingResource)
     }
 

@@ -52,4 +52,17 @@ class GameTest {
         game.play(Game.Choice.PAPER)
         assertEquals(game.score, 0)
     }
+
+    @Test
+    fun whenScoreTwoAndYouLoseThenScoreOne() {
+        repeat(2){
+            game.compChoice = Game.Choice.PAPER
+            game.play(Game.Choice.SCISSORS)
+        }
+
+        game.compChoice = Game.Choice.SCISSORS
+        game.play(Game.Choice.PAPER)
+
+        assertEquals(game.score, 1)
+    }
 }

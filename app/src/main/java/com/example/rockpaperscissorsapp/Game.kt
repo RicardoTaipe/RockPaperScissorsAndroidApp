@@ -18,13 +18,12 @@ class Game {
     var score = 0
 
     fun randomChoice(): Choice {
-        compChoice = Choice.values().random()
-        return compChoice as Choice
+        return Choice.entries.random()
     }
 
     fun play(userChoice: Choice): Result {
         return if ((userChoice.ordinal + 1) % 3 == compChoice?.ordinal) {
-            if (score > 0) score--
+            score = (score - 1).coerceAtLeast(0)
             Result.LOSE
         } else if (userChoice.ordinal == compChoice?.ordinal) {
             Result.DRAW

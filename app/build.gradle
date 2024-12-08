@@ -58,7 +58,6 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
     testImplementation(libs.junit)
     testImplementation "org.mockito:mockito-core:4.8.0"
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     implementation 'androidx.test.espresso:espresso-idling-resource:3.5.1'
 
     // Splash API
