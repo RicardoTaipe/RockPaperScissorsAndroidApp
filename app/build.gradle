@@ -63,6 +63,8 @@ dependencies {
 
     // Splash API
     implementation(libs.androidx.core.splashscreen)
+    implementation(libs.coil.compose)
+
     //COMPOSE DEPENDENCIES
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
