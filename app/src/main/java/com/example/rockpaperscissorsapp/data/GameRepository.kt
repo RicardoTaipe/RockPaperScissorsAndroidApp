@@ -1,7 +1,4 @@
-package com.example.rockpaperscissorsapp
-
-import com.example.rockpaperscissorsapp.model.Choice
-import com.example.rockpaperscissorsapp.model.Result
+package com.example.rockpaperscissorsapp.data
 
 interface GameRepository {
     val score: Int

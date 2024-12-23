@@ -1,4 +1,4 @@
-package com.example.rockpaperscissorsapp
+package com.example.rockpaperscissorsapp.utils
 
 import androidx.test.espresso.idling.CountingIdlingResource
 

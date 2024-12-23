@@ -1,7 +1,5 @@
-package com.example.rockpaperscissorsapp
+package com.example.rockpaperscissorsapp.data
 
-import com.example.rockpaperscissorsapp.model.Choice
-import com.example.rockpaperscissorsapp.model.Result
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test

@@ -1,4 +1,4 @@
-package com.example.rockpaperscissorsapp
+package com.example.rockpaperscissorsapp.rules
 
 import android.app.Dialog
 import android.os.Bundle
@@ -44,10 +44,12 @@ class RulesFragment : BottomSheetDialogFragment() {
     ): View {
         isCancelable = false
         binding = FragmentRulesBinding.inflate(inflater, container, false)
-        binding.closeButton.setOnClickListener {
-            dismiss()
+        return with(binding) {
+            closeButton.setOnClickListener {
+                dismiss()
+            }
+            root
         }
-        return binding.root
     }
 
     companion object {

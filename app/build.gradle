@@ -45,6 +45,9 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 
 }
 
@@ -57,7 +60,8 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
     implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
     testImplementation(libs.junit)
-    testImplementation "org.mockito:mockito-core:4.8.0"
+    testImplementation libs.mockito.core
+    testImplementation libs.mockito.inline
     implementation 'androidx.test.espresso:espresso-idling-resource:3.5.1'
 
     // Splash API

@@ -1,4 +1,4 @@
-package com.example.rockpaperscissorsapp
+package com.example.rockpaperscissorsapp.play
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,9 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.example.rockpaperscissorsapp.R
 import com.example.rockpaperscissorsapp.databinding.FragmentPlayBinding
-import com.example.rockpaperscissorsapp.model.Choice
-import com.example.rockpaperscissorsapp.model.GameViewModel
+import com.example.rockpaperscissorsapp.data.Choice
+import com.example.rockpaperscissorsapp.game.GameViewModel
 
 
 class PlayFragment : Fragment() {

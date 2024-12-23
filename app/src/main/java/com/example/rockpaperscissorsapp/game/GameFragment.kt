@@ -1,4 +1,4 @@
-package com.example.rockpaperscissorsapp
+package com.example.rockpaperscissorsapp.game
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,10 +12,11 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.example.rockpaperscissorsapp.R
 import com.example.rockpaperscissorsapp.databinding.FragmentGameBinding
-import com.example.rockpaperscissorsapp.model.GameViewModel
+import com.example.rockpaperscissorsapp.data.Choice
 import com.google.android.material.imageview.ShapeableImageView
-
+import com.example.rockpaperscissorsapp.data.Result
 
 class GameFragment : Fragment() {
     private lateinit var binding: FragmentGameBinding
@@ -74,9 +75,9 @@ class GameFragment : Fragment() {
             binding.result.apply {
                 text = getString(
                     when (it) {
-                        Game.Result.WIN -> R.string.you_win
-                        Game.Result.DRAW -> R.string.draw
-                        Game.Result.LOSE -> R.string.you_lose
+                        Result.WIN -> R.string.you_win
+                        Result.DRAW -> R.string.draw
+                        Result.LOSE -> R.string.you_lose
                     }
                 )
                 isVisible = true
@@ -85,23 +86,23 @@ class GameFragment : Fragment() {
         }
     }
 
-    private fun setUiData(view: ShapeableImageView, data: Game.Choice) {
+    private fun setUiData(view: ShapeableImageView, data: Choice) {
         @DrawableRes
         val drawable: Int
         val image: Int
 
         when (data) {
-            Game.Choice.ROCK -> {
+            Choice.ROCK -> {
                 drawable = R.drawable.bg_rock
                 image = R.drawable.icon_rock
             }
 
-            Game.Choice.PAPER -> {
+            Choice.PAPER -> {
                 drawable = R.drawable.bg_paper
                 image = R.drawable.icon_paper
             }
 
-            Game.Choice.SCISSORS -> {
+            Choice.SCISSORS -> {
                 drawable = R.drawable.bg_scissors
                 image = R.drawable.icon_scissors
             }

@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/playFragment"
-        android:name="com.example.rockpaperscissorsapp.PlayFragment"
+        android:name="com.example.rockpaperscissorsapp.play.PlayFragment"
         android:label="fragment_play"
         tools:layout="@layout/fragment_play" >
         <action
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/gameFragment"
-        android:name="com.example.rockpaperscissorsapp.GameFragment"
+        android:name="com.example.rockpaperscissorsapp.game.GameFragment"
         android:label="fragment_game"
         tools:layout="@layout/fragment_game" >
         <action

@@ -1,4 +1,4 @@
-package com.example.rockpaperscissorsapp.model
+package com.example.rockpaperscissorsapp.game
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,10 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.map
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.rockpaperscissorsapp.GameRepository
-import com.example.rockpaperscissorsapp.GameRepositoryImp
 import com.example.rockpaperscissorsapp.MyCountDownTimer
 import com.example.rockpaperscissorsapp.ShadowCountdownTimer
+import com.example.rockpaperscissorsapp.data.Choice
+import com.example.rockpaperscissorsapp.data.GameRepository
+import com.example.rockpaperscissorsapp.data.GameRepositoryImp
+import com.example.rockpaperscissorsapp.data.Result
 
 private const val ONE_SECOND = 1000L
 private const val COUNTDOWN_TIME = 3000L
@@ -73,7 +75,10 @@ class GameViewModel(private val gameRepository: GameRepository, private val time
             override fun <T : ViewModel> create(
                 modelClass: Class<T>, extras: CreationExtras
             ): T {
-                return GameViewModel(GameRepositoryImp(), MyCountDownTimer(COUNTDOWN_TIME, ONE_SECOND)) as T
+                return GameViewModel(
+                    GameRepositoryImp(),
+                    MyCountDownTimer(COUNTDOWN_TIME, ONE_SECOND)
+                ) as T
             }
         }
     }
