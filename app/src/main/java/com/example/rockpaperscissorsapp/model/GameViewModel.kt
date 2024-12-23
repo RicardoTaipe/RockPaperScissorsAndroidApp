@@ -6,51 +6,53 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.map
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.rockpaperscissorsapp.EspressoIdlingResource
-import com.example.rockpaperscissorsapp.Game
+import com.example.rockpaperscissorsapp.GameRepository
+import com.example.rockpaperscissorsapp.GameRepositoryImp
 import com.example.rockpaperscissorsapp.MyCountDownTimer
+import com.example.rockpaperscissorsapp.ShadowCountdownTimer
 
 private const val ONE_SECOND = 1000L
 private const val COUNTDOWN_TIME = 3000L
+private const val TOTAL_TIME_TIMER = COUNTDOWN_TIME / ONE_SECOND
 
-class GameViewModel(private val game: Game, private val timer: MyCountDownTimer) :
+class GameViewModel(private val gameRepository: GameRepository, private val timer: MyCountDownTimer) :
     ViewModel() {
-    //var timer: CountDownTimer
-    private val _yourChoice = MutableLiveData<Game.Choice?>()
-    val yourChoice: LiveData<Game.Choice?> = _yourChoice
-    private val _comChoice = MutableLiveData<Game.Choice?>()
-    val comChoice: LiveData<Game.Choice?> = _comChoice
-    private val _result = MutableLiveData<Game.Result?>()
-    val result: LiveData<Game.Result?> = _result
+    private val _yourChoice = MutableLiveData<Choice?>()
+    val yourChoice: LiveData<Choice?> = _yourChoice
+    private val _comChoice = MutableLiveData<Choice?>()
+    val comChoice: LiveData<Choice?> = _comChoice
+    private val _result = MutableLiveData<Result?>()
+    val result: LiveData<Result?> = _result
 
     private val _score = MutableLiveData(0)
     val score = _score.map {
         it.toString()
     }
-    private val _counter = MutableLiveData<Long>()
+    private val _counter = MutableLiveData(TOTAL_TIME_TIMER)
     val counter = _counter.map {
         it.toString()
     }
 
     init {
+        gameRepository.randomProvider = { Choice.entries.random() }
+        timer.setListener(object : ShadowCountdownTimer.Listener {
+            override fun onTick(millisUntilFinished: Long) {
+                _counter.value = ((millisUntilFinished) / ONE_SECOND).inc()
+            }
 
-        timer.run {
-            onTickListener = { millisUntilFinished ->
-                _counter.value = ((millisUntilFinished + ONE_SECOND) / ONE_SECOND)
+            override fun onFinish() {
+                _comChoice.value = gameRepository.getRandomComputerChoice()
+                _result.value = gameRepository.play(_yourChoice.value!!)
+                _score.value = gameRepository.score
+                //EspressoIdlingResource.decrement()
             }
-            onFinishListener = {
-                _comChoice.value = game.randomChoice()
-                _result.value = game.play(_yourChoice.value!!)
-                _score.value = game.score
-                EspressoIdlingResource.decrement()
-            }
-        }
+        })
     }
 
-    fun selectOption(option: Game.Choice) {
+    fun selectOption(option: Choice) {
         _yourChoice.value = option
         timer.start()
-        EspressoIdlingResource.increment()
+        //EspressoIdlingResource.increment()
     }
 
     override fun onCleared() {
@@ -71,7 +73,7 @@ class GameViewModel(private val game: Game, private val timer: MyCountDownTimer)
             override fun <T : ViewModel> create(
                 modelClass: Class<T>, extras: CreationExtras
             ): T {
-                return GameViewModel(Game(), MyCountDownTimer(COUNTDOWN_TIME, ONE_SECOND)) as T
+                return GameViewModel(GameRepositoryImp(), MyCountDownTimer(COUNTDOWN_TIME, ONE_SECOND)) as T
             }
         }
     }
