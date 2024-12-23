@@ -6,7 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.NavHostFragment
 import com.example.rockpaperscissorsapp.databinding.ActivityMainBinding
-import com.example.rockpaperscissorsapp.model.GameViewModel
+import com.example.rockpaperscissorsapp.game.GameViewModel
+import com.example.rockpaperscissorsapp.rules.RulesFragment
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -21,6 +22,11 @@ class MainActivity : AppCompatActivity() {
         binding.rulesButton.setOnClickListener {
             RulesFragment().show(supportFragmentManager, RulesFragment.TAG)
         }
+//        installSplashScreen()
+//        enableEdgeToEdge()
+//        setContent {
+//            RulesScreen()
+//        }
     }
 
 }
