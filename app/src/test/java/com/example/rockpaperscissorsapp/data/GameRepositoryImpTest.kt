@@ -18,8 +18,7 @@ class GameRepositoryImpTest {
 
     @Before
     fun setUp() {
-        gameRepository = GameRepositoryImp()
-        gameRepository.randomProvider = mockRandomProvider
+        gameRepository = GameRepositoryImp(mockRandomProvider)
     }
 
     @Test

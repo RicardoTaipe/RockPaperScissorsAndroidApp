@@ -1,7 +1,6 @@
 package com.example.rockpaperscissorsapp.data
 
-class GameRepositoryImp : GameRepository {
-    override lateinit var randomProvider: () -> Choice
+class GameRepositoryImp(private val randomProvider: () -> Choice) : GameRepository {
 
     private var computerChoice: Choice = Choice.ROCK
 
@@ -13,14 +12,20 @@ class GameRepositoryImp : GameRepository {
     }
 
     override fun play(userChoice: Choice): Result {
-        return if ((userChoice.ordinal + 1) % 3 == computerChoice.ordinal) {
-            score = (score - 1).coerceAtLeast(0)
-            Result.LOSE
-        } else if (userChoice.ordinal == computerChoice.ordinal) {
-            Result.DRAW
-        } else {
-            score++
-            Result.WIN
+        return when {
+            userChoice == computerChoice -> {
+                Result.DRAW
+            }
+
+            userChoice.beats(computerChoice) -> {
+                score++
+                Result.WIN
+            }
+
+            else -> {
+                score = (score - 1).coerceAtLeast(0)
+                Result.LOSE
+            }
         }
     }
 }

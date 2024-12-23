@@ -17,7 +17,10 @@ private const val ONE_SECOND = 1000L
 private const val COUNTDOWN_TIME = 3000L
 private const val TOTAL_TIME_TIMER = COUNTDOWN_TIME / ONE_SECOND
 
-class GameViewModel(private val gameRepository: GameRepository, private val timer: MyCountDownTimer) :
+class GameViewModel(
+    private val gameRepository: GameRepository,
+    private val timer: MyCountDownTimer
+) :
     ViewModel() {
     private val _yourChoice = MutableLiveData<Choice?>()
     val yourChoice: LiveData<Choice?> = _yourChoice
@@ -36,7 +39,6 @@ class GameViewModel(private val gameRepository: GameRepository, private val time
     }
 
     init {
-        gameRepository.randomProvider = { Choice.entries.random() }
         timer.setListener(object : ShadowCountdownTimer.Listener {
             override fun onTick(millisUntilFinished: Long) {
                 _counter.value = ((millisUntilFinished) / ONE_SECOND).inc()
@@ -76,7 +78,7 @@ class GameViewModel(private val gameRepository: GameRepository, private val time
                 modelClass: Class<T>, extras: CreationExtras
             ): T {
                 return GameViewModel(
-                    GameRepositoryImp(),
+                    GameRepositoryImp({ Choice.entries.random() }),
                     MyCountDownTimer(COUNTDOWN_TIME, ONE_SECOND)
                 ) as T
             }
