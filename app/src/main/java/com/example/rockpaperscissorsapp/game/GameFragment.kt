@@ -26,14 +26,13 @@ class GameFragment : Fragment() {
             this,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    resetGameAndHandleBackPress()
+                    gameViewModel.resetGame()
+                    if (isEnabled) {
+                        isEnabled = false
+                        requireActivity().onBackPressedDispatcher.onBackPressed()
+                    }
                 }
             })
-    }
-
-    private fun resetGameAndHandleBackPress() {
-        gameViewModel.resetGame()
-        requireActivity().onBackPressedDispatcher.onBackPressed()
     }
 
     override fun onCreateView(

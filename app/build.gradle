@@ -70,6 +70,8 @@ dependencies {
 
     //for livedata
     testImplementation libs.androidx.core.testing
+    //test coroutines
+    testImplementation libs.kotlinx.coroutines.test
 
     //COMPOSE DEPENDENCIES
     implementation(libs.androidx.lifecycle.runtime.ktx)

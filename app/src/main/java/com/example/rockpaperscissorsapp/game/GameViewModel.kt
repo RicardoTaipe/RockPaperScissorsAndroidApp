@@ -6,20 +6,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.map
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.rockpaperscissorsapp.MyCountDownTimer
-import com.example.rockpaperscissorsapp.ShadowCountdownTimer
+import com.example.rockpaperscissorsapp.countdown.MyCountDownTimer
+import com.example.rockpaperscissorsapp.countdown.MyCountDownTimer.Companion.COUNTDOWN_TIME
+import com.example.rockpaperscissorsapp.countdown.MyCountDownTimer.Companion.ONE_SECOND
+import com.example.rockpaperscissorsapp.countdown.MyCountDownTimer.Companion.TOTAL_TIME_TIMER
+import com.example.rockpaperscissorsapp.countdown.ShadowCountdownTimer
 import com.example.rockpaperscissorsapp.data.Choice
 import com.example.rockpaperscissorsapp.data.GameRepository
 import com.example.rockpaperscissorsapp.data.GameRepositoryImp
 import com.example.rockpaperscissorsapp.data.Result
 
-private const val ONE_SECOND = 1000L
-private const val COUNTDOWN_TIME = 3000L
-private const val TOTAL_TIME_TIMER = COUNTDOWN_TIME / ONE_SECOND
-
 class GameViewModel(
     private val gameRepository: GameRepository,
-    private val timer: MyCountDownTimer
+    private val timer: ShadowCountdownTimer
 ) :
     ViewModel() {
     private val _yourChoice = MutableLiveData<Choice?>()
@@ -37,8 +36,8 @@ class GameViewModel(
     private val _counter = MutableLiveData(TOTAL_TIME_TIMER)
     val counter = _counter.map { it.toString() }
 
-    init {
-        timer.setListener(object : ShadowCountdownTimer.Listener {
+    private fun setTimerListener() {
+        timer.listener = object : ShadowCountdownTimer.Listener {
             override fun onTick(millisUntilFinished: Long) {
                 _counter.value = ((millisUntilFinished) / ONE_SECOND).inc()
             }
@@ -51,11 +50,12 @@ class GameViewModel(
                     //EspressoIdlingResource.decrement()
                 }
             }
-        })
+        }
     }
 
     fun selectOption(option: Choice) {
         _yourChoice.value = option
+        setTimerListener()
         timer.start()
         //EspressoIdlingResource.increment()
     }
