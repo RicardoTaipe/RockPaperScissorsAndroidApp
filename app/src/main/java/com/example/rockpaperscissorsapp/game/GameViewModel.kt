@@ -15,6 +15,7 @@ import com.example.rockpaperscissorsapp.data.Choice
 import com.example.rockpaperscissorsapp.data.GameRepository
 import com.example.rockpaperscissorsapp.data.GameRepositoryImp
 import com.example.rockpaperscissorsapp.data.Result
+import com.example.rockpaperscissorsapp.utils.EspressoIdlingResource
 
 class GameViewModel(
     private val gameRepository: GameRepository,
@@ -47,7 +48,7 @@ class GameViewModel(
                 _yourChoice.value?.let {
                     _result.value = gameRepository.play(it)
                     _score.value = gameRepository.score
-                    //EspressoIdlingResource.decrement()
+                    EspressoIdlingResource.decrement()
                 }
             }
         }
@@ -57,7 +58,7 @@ class GameViewModel(
         _yourChoice.value = option
         setTimerListener()
         timer.start()
-        //EspressoIdlingResource.increment()
+        EspressoIdlingResource.increment()
     }
 
     override fun onCleared() {
