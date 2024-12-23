@@ -24,19 +24,18 @@ class GameViewModel(
     ViewModel() {
     private val _yourChoice = MutableLiveData<Choice?>()
     val yourChoice: LiveData<Choice?> = _yourChoice
+
     private val _comChoice = MutableLiveData<Choice?>()
     val comChoice: LiveData<Choice?> = _comChoice
+
     private val _result = MutableLiveData<Result?>()
     val result: LiveData<Result?> = _result
 
     private val _score = MutableLiveData(0)
-    val score = _score.map {
-        it.toString()
-    }
+    val score = _score.map { it.toString() }
+
     private val _counter = MutableLiveData(TOTAL_TIME_TIMER)
-    val counter = _counter.map {
-        it.toString()
-    }
+    val counter = _counter.map { it.toString() }
 
     init {
         timer.setListener(object : ShadowCountdownTimer.Listener {
@@ -46,9 +45,11 @@ class GameViewModel(
 
             override fun onFinish() {
                 _comChoice.value = gameRepository.getRandomComputerChoice()
-                _result.value = gameRepository.play(_yourChoice.value!!)
-                _score.value = gameRepository.score
-                //EspressoIdlingResource.decrement()
+                _yourChoice.value?.let {
+                    _result.value = gameRepository.play(it)
+                    _score.value = gameRepository.score
+                    //EspressoIdlingResource.decrement()
+                }
             }
         })
     }
