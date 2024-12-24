@@ -95,13 +95,15 @@ class GameViewModelTest {
     @Test
     fun `GIVEN a choice is selected WHEN selectOption is called THEN the onTick listener is triggered and the counter is updated`() {
         // GIVEN
+        val millisUntilFinished = 2000L
         val expectedSecondsRemaining = (2000L / ONE_SECOND).inc()
-        mockTimer.typeListener = OnTick(expectedSecondsRemaining)
+        mockTimer.typeListener = OnTick(millisUntilFinished)
 
         // WHEN
         gameViewModel.selectOption(Choice.ROCK)
 
         // THEN
+        assertTrue(mockTimer.onStartCalled)
         assertEquals(expectedSecondsRemaining.toString(), gameViewModel.counter.getOrAwaitValue())
     }
 }

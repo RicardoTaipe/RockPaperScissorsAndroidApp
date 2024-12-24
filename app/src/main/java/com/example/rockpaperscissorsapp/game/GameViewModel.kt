@@ -80,7 +80,7 @@ class GameViewModel(
                 modelClass: Class<T>, extras: CreationExtras
             ): T {
                 return GameViewModel(
-                    GameRepositoryImp({ Choice.entries.random() }),
+                    GameRepositoryImp { Choice.entries.random() },
                     MyCountDownTimer(COUNTDOWN_TIME, ONE_SECOND)
                 ) as T
             }
