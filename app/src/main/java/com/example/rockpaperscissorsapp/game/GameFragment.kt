@@ -19,7 +19,7 @@ import com.google.android.material.imageview.ShapeableImageView
 
 class GameFragment : Fragment() {
     private lateinit var binding: FragmentGameBinding
-    private val gameViewModel: GameViewModel by activityViewModels()
+    private val gameViewModel: GameViewModel by activityViewModels { GameViewModel.Factory }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requireActivity().onBackPressedDispatcher.addCallback(
@@ -65,7 +65,7 @@ class GameFragment : Fragment() {
 
         binding.playAgain.setOnClickListener {
             gameViewModel.resetGame()
-            findNavController().navigate(R.id.action_gameFragment_to_playFragment)
+            findNavController().navigate(GameFragmentDirections.actionGameFragmentToPlayFragment())
         }
 
         gameViewModel.result.observe(viewLifecycleOwner) { gameResult ->
