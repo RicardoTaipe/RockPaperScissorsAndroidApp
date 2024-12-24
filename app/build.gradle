@@ -1,6 +1,7 @@
 plugins {
     alias libs.plugins.androidApplication
     alias libs.plugins.jetbrainsKotlinAndroid
+    id 'androidx.navigation.safeargs.kotlin'
 }
 
 android {
@@ -38,7 +39,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.14"
     }
     packaging {
         resources {
@@ -54,7 +55,7 @@ android {
 dependencies {
     implementation (libs.androidx.core.ktx)
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'androidx.fragment:fragment-ktx:1.5.6'
+    implementation libs.androidx.fragment.ktx
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
@@ -72,6 +73,13 @@ dependencies {
     testImplementation libs.androidx.core.testing
     //test coroutines
     testImplementation libs.kotlinx.coroutines.test
+    debugImplementation libs.androidx.fragment.testing
+
+    //instrumented test
+    androidTestImplementation libs.androidx.junit
+    androidTestImplementation libs.androidx.espresso.core
+    androidTestImplementation libs.mockito.core
+    androidTestImplementation libs.dexmaker.mockito
 
     //COMPOSE DEPENDENCIES
     implementation(libs.androidx.lifecycle.runtime.ktx)
