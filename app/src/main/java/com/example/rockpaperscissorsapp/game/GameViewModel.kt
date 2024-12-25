@@ -4,16 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.map
-import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.rockpaperscissorsapp.countdown.MyCountDownTimer
-import com.example.rockpaperscissorsapp.countdown.MyCountDownTimer.Companion.COUNTDOWN_TIME
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.rockpaperscissorsapp.RockPaperScissorsApplication
 import com.example.rockpaperscissorsapp.countdown.MyCountDownTimer.Companion.ONE_SECOND
 import com.example.rockpaperscissorsapp.countdown.MyCountDownTimer.Companion.TOTAL_TIME_TIMER
 import com.example.rockpaperscissorsapp.countdown.ShadowCountdownTimer
 import com.example.rockpaperscissorsapp.data.Choice
 import com.example.rockpaperscissorsapp.data.GameRepository
-import com.example.rockpaperscissorsapp.data.GameRepositoryImp
 import com.example.rockpaperscissorsapp.data.Result
 import com.example.rockpaperscissorsapp.utils.EspressoIdlingResource
 
@@ -74,15 +74,10 @@ class GameViewModel(
     }
 
     companion object {
-        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(
-                modelClass: Class<T>, extras: CreationExtras
-            ): T {
-                return GameViewModel(
-                    GameRepositoryImp { Choice.entries.random() },
-                    MyCountDownTimer(COUNTDOWN_TIME, ONE_SECOND)
-                ) as T
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val container = (this[APPLICATION_KEY] as RockPaperScissorsApplication).container
+                GameViewModel(container.gameRepository, container.timer)
             }
         }
     }
