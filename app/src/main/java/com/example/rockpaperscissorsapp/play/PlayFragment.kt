@@ -9,12 +9,11 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.rockpaperscissorsapp.data.Choice
 import com.example.rockpaperscissorsapp.databinding.FragmentPlayBinding
-import com.example.rockpaperscissorsapp.game.GameViewModel
 
 
 class PlayFragment : Fragment() {
     private lateinit var binding: FragmentPlayBinding
-    private val gameViewModel: GameViewModel by activityViewModels { GameViewModel.Factory }
+    private val playViewModel: PlayViewModel by activityViewModels { PlayViewModel.Factory }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,8 +41,7 @@ class PlayFragment : Fragment() {
     }
 
     private fun navigateToGameFragment(option: Choice) {
-        gameViewModel.selectOption(option)
+        playViewModel.selectOption(option)
         findNavController().navigate(PlayFragmentDirections.actionPlayFragmentToGameFragment())
-
     }
 }

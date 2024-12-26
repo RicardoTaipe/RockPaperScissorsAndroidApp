@@ -46,12 +46,12 @@ class GameViewModelTest {
     }
 
     @Test
-    fun `GIVEN a choice is selected WHEN selectOption is called THEN yourChoice is updated and timer starts`() {
+    fun `GIVEN a choice is saved WHEN playGame is called THEN yourChoice is updated and timer starts`() {
         // GIVEN
         val testChoice = Choice.ROCK
-
+        `when`(mockGameRepository.userChoice).thenReturn(testChoice)
         // WHEN
-        gameViewModel.selectOption(testChoice)
+        gameViewModel.playGame()
 
         // THEN
         assertEquals(testChoice, gameViewModel.yourChoice.getOrAwaitValue())
@@ -71,19 +71,19 @@ class GameViewModelTest {
         assertTrue(mockTimer.onCancelCalled)
     }
 
-
     @Test
     fun `GIVEN a choice is selected WHEN selectOption is called THEN the onFinish listener is triggered and the computer's choice, user and score are set`() {
         // GIVEN
         val testChoice = Choice.ROCK
         mockTimer.typeListener = OnFinish
+        `when`(mockGameRepository.userChoice).thenReturn(testChoice)
         `when`(mockGameRepository.getRandomComputerChoice()).thenReturn(Choice.SCISSORS)
-        `when`(mockGameRepository.play(testChoice)).thenReturn(Result.WIN)
+        `when`(mockGameRepository.play()).thenReturn(Result.WIN)
         val expectedScore = 1
         `when`(mockGameRepository.score).thenReturn(expectedScore)
 
         // WHEN
-        gameViewModel.selectOption(testChoice)
+        gameViewModel.playGame()
 
         // THEN
         assertEquals(Choice.SCISSORS, gameViewModel.comChoice.getOrAwaitValue())
@@ -93,14 +93,15 @@ class GameViewModelTest {
     }
 
     @Test
-    fun `GIVEN a choice is selected WHEN selectOption is called THEN the onTick listener is triggered and the counter is updated`() {
+    fun `GIVEN a choice is saved WHEN selectOption is called THEN the onTick listener is triggered and the counter is updated`() {
         // GIVEN
         val millisUntilFinished = 2000L
         val expectedSecondsRemaining = (2000L / ONE_SECOND).inc()
         mockTimer.typeListener = OnTick(millisUntilFinished)
+        `when`(mockGameRepository.userChoice).thenReturn(Choice.ROCK)
 
         // WHEN
-        gameViewModel.selectOption(Choice.ROCK)
+        gameViewModel.playGame()
 
         // THEN
         assertTrue(mockTimer.onStartCalled)

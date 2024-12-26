@@ -3,6 +3,7 @@ package com.example.rockpaperscissorsapp.data
 class GameRepositoryImp(private val randomProvider: () -> Choice) : GameRepository {
 
     private var computerChoice: Choice = Choice.ROCK
+    override var userChoice: Choice = Choice.ROCK
 
     override var score = 0
         private set
@@ -11,7 +12,7 @@ class GameRepositoryImp(private val randomProvider: () -> Choice) : GameReposito
         return randomProvider.invoke().also { computerChoice = it }
     }
 
-    override fun play(userChoice: Choice): Result {
+    override fun play(): Result {
         return when {
             userChoice == computerChoice -> {
                 Result.DRAW

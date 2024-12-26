@@ -31,37 +31,42 @@ class GameRepositoryImpTest {
     @Test
     fun whenYouPaperAndComScissorsThenLose() {
         `when`(mockRandomProvider.invoke()).thenReturn(Choice.SCISSORS)
+        gameRepository.userChoice = Choice.PAPER
         gameRepository.getRandomComputerChoice()
-        assertEquals(Result.LOSE, gameRepository.play(Choice.PAPER))
+        assertEquals(Result.LOSE, gameRepository.play())
     }
 
     @Test
     fun whenYouPaperAndComRockThenWin() {
         `when`(mockRandomProvider.invoke()).thenReturn(Choice.ROCK)
+        gameRepository.userChoice = Choice.PAPER
         gameRepository.getRandomComputerChoice()
-        assertEquals(Result.WIN, gameRepository.play(Choice.PAPER))
+        assertEquals(Result.WIN, gameRepository.play())
     }
 
     @Test
     fun whenYouPaperAndComPaperThenDraw() {
         `when`(mockRandomProvider.invoke()).thenReturn(Choice.PAPER)
+        gameRepository.userChoice = Choice.PAPER
         gameRepository.getRandomComputerChoice()
-        assertEquals(Result.DRAW, gameRepository.play(Choice.PAPER))
+        assertEquals(Result.DRAW, gameRepository.play())
     }
 
     @Test
     fun whenYouWinThenAddScore() {
         `when`(mockRandomProvider.invoke()).thenReturn(Choice.ROCK)
+        gameRepository.userChoice = Choice.PAPER
         gameRepository.getRandomComputerChoice()
-        gameRepository.play(Choice.PAPER)
+        gameRepository.play()
         assertEquals(gameRepository.score, 1)
     }
 
     @Test
     fun whenScoreZeroAndYouLoseThenScoreZero() {
         `when`(mockRandomProvider.invoke()).thenReturn(Choice.SCISSORS)
+        gameRepository.userChoice = Choice.PAPER
         gameRepository.getRandomComputerChoice()
-        gameRepository.play(Choice.PAPER)
+        gameRepository.play()
         assertEquals(gameRepository.score, 0)
     }
 
@@ -69,13 +74,15 @@ class GameRepositoryImpTest {
     fun whenScoreTwoAndYouLoseThenScoreOne() {
         repeat(2) {
             `when`(mockRandomProvider.invoke()).thenReturn(Choice.PAPER)
+            gameRepository.userChoice = Choice.SCISSORS
             gameRepository.getRandomComputerChoice()
-            gameRepository.play(Choice.SCISSORS)
+            gameRepository.play()
         }
 
         `when`(mockRandomProvider.invoke()).thenReturn(Choice.SCISSORS)
+        gameRepository.userChoice = Choice.PAPER
         gameRepository.getRandomComputerChoice()
-        gameRepository.play(Choice.PAPER)
+        gameRepository.play()
 
         assertEquals(gameRepository.score, 1)
     }

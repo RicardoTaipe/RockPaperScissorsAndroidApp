@@ -14,11 +14,8 @@ interface AppContainer {
 }
 
 class DefaultAppContainer : AppContainer {
-    override val gameRepository: GameRepository by lazy {
-        GameRepositoryImp({ Choice.entries.random() })
-    }
+    override val gameRepository: GameRepository = GameRepositoryImp({ Choice.entries.random() })
 
-    override val timer: ShadowCountdownTimer by lazy {
-        MyCountDownTimer(COUNTDOWN_TIME, ONE_SECOND)
-    }
+    override val timer: ShadowCountdownTimer = MyCountDownTimer(COUNTDOWN_TIME, ONE_SECOND)
+
 }

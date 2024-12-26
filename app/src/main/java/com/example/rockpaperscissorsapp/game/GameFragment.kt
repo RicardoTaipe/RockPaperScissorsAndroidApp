@@ -49,6 +49,8 @@ class GameFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        gameViewModel.playGame()
+
         gameViewModel.yourChoice.observe(viewLifecycleOwner) { choice ->
             choice?.let { setUiData(binding.userChoice, it) }
         }
