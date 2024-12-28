@@ -1,8 +1,10 @@
 package com.example.rockpaperscissorsapp
 
 import android.os.Bundle
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.NavHostFragment
 import com.example.rockpaperscissorsapp.databinding.ActivityMainBinding
@@ -22,11 +24,9 @@ class MainActivity : AppCompatActivity() {
         binding.rulesButton.setOnClickListener {
             RulesFragment().show(supportFragmentManager, RulesFragment.TAG)
         }
-//        installSplashScreen()
-//        enableEdgeToEdge()
-//        setContent {
-//            RulesScreen()
-//        }
+        installSplashScreen()
+        enableEdgeToEdge()
+
     }
 
 }
