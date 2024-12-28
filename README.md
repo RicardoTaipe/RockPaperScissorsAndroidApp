@@ -17,19 +17,16 @@ This is a simple Android application that implements the classic Rock-Paper-Scis
 
 ---
 
-## 🏗 Architecture
-The app follows the **MVVM (Model-View-ViewModel)** architecture pattern for better maintainability and scalability:
-
-- **Model**: Handles game logic (e.g., determining the winner) and provides data for the ViewModel.
-- **ViewModel**: Acts as a mediator between the Model and the View. It exposes observable data to the View and contains no reference to the UI.
-- **View**: Displays the UI and interacts with the ViewModel through data binding.
+## 🖼 Screenshots
+Here are some screenshots of the app:
+| Play Screen      | Gameplay Screen | Rules Screen     |
+| ---        |    ----    |          --- |
+| ![image](https://github.com/user-attachments/assets/42c264e4-86f3-4688-9ceb-765d2cd78a23)| ![image](https://github.com/user-attachments/assets/8a656b74-ba48-4cd7-a85b-a5b529f62728)| ![image](https://github.com/user-attachments/assets/03812753-01c6-4c44-b2b2-0322f8ac6cb0)|
 
 ---
 
-## 🛠️ Manual Dependency Injection
-Instead of using a DI framework, dependencies are manually managed and passed through constructors or setters. This approach ensures:
-- Lightweight and simple DI implementation.
-- Full control over object lifecycle and instantiation.
+## 🎨 UI Design
+The UI design for this app is based on designs provided by [Frontend Mentor](https://www.frontendmentor.io/challenges/rock-paper-scissors-game-pTgwgvgH) . Their resources were instrumental in creating a clean and user-friendly interface for the game.
 
 ---
 
@@ -47,13 +44,14 @@ The app includes the following tests:
 ## 📂 Project Structure
 ```
 app/
-├── data/
+├── countdown/         # Countdown Timer logic
 │   ├── model/         # Game-related models
-│   ├── repository/    # Data handling logic
-├── ui/
+├── data/
+│   ├── repository/    # Handles model and bussiness logic
+├── di/                # Manual dependency injection setup
+├── feature/
 │   ├── view/          # Activities/Fragments (UI)
 │   ├── viewmodel/     # ViewModels for UI logic
-├── di/                # Manual dependency injection setup
 ├── util/              # Utility classes
 ├── test/              # Unit tests
 ├── androidTest/       # Instrumented tests
