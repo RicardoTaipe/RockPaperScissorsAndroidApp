@@ -11,10 +11,14 @@ import com.example.rockpaperscissorsapp.data.GameRepositoryImp
 interface AppContainer {
     val gameRepository: GameRepository
     val timer: ShadowCountdownTimer
+    val randomProvider: () -> Choice
 }
 
-class DefaultAppContainer : AppContainer {
-    override val gameRepository: GameRepository = GameRepositoryImp({ Choice.entries.random() })
+object DefaultAppContainer : AppContainer {
+
+    override val randomProvider: () -> Choice = { Choice.entries.random() }
+    
+    override val gameRepository: GameRepository = GameRepositoryImp(randomProvider)
 
     override val timer: ShadowCountdownTimer = MyCountDownTimer(COUNTDOWN_TIME, ONE_SECOND)
 

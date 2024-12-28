@@ -45,17 +45,15 @@ class GameViewModel(
 
             override fun onFinish() {
                 _comChoice.value = gameRepository.getRandomComputerChoice()
-                _yourChoice.value?.let {
-                    _result.value = gameRepository.play(it)
-                    _score.value = gameRepository.score
-                    EspressoIdlingResource.decrement()
-                }
+                _result.value = gameRepository.play()
+                _score.value = gameRepository.score
+                EspressoIdlingResource.decrement()
             }
         }
     }
 
-    fun selectOption(option: Choice) {
-        _yourChoice.value = option
+    fun playGame() {
+        _yourChoice.value = gameRepository.userChoice
         setTimerListener()
         timer.start()
         EspressoIdlingResource.increment()

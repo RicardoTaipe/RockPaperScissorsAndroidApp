@@ -16,7 +16,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "com.example.rockpaperscissorsapp.CustomTestRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -60,16 +60,16 @@ android {
 
 dependencies {
     implementation (libs.androidx.core.ktx)
-    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation libs.androidx.appcompat
     implementation libs.androidx.fragment.ktx
-    implementation 'com.google.android.material:material:1.8.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
+    implementation libs.material
+    implementation libs.androidx.constraintlayout
+    implementation libs.androidx.navigation.fragment.ktx
+    implementation libs.androidx.navigation.ui.ktx
     testImplementation(libs.junit)
     testImplementation libs.mockito.core
     testImplementation libs.mockito.inline
-    implementation 'androidx.test.espresso:espresso-idling-resource:3.5.1'
+    implementation libs.androidx.espresso.idling.resource
 
     // Splash API
     implementation(libs.androidx.core.splashscreen)
