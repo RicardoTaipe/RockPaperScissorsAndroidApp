@@ -43,6 +43,8 @@ class GameFragment : Fragment() {
             binding = this
             lifecycleOwner = viewLifecycleOwner
             viewModel = gameViewModel
+            userChoice.stateListAnimator = null
+            comChoice.stateListAnimator = null
             root
         }
     }
