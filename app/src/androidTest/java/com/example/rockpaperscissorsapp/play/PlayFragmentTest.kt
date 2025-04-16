@@ -32,7 +32,7 @@ class PlayFragmentTest {
     private lateinit var gameRepository: GameRepository
 
     @Before
-    fun registerIdlingResource() {
+    fun setUp() {
         MockitoAnnotations.openMocks(this)
         getApplicationContext<RockPaperScissorsApplication>().container = mockContainer
         `when`(mockContainer.gameRepository).thenReturn(gameRepository)

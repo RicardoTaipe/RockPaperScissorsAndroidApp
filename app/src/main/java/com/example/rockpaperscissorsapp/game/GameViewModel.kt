@@ -40,16 +40,24 @@ class GameViewModel(
     private fun setTimerListener() {
         timer.listener = object : ShadowCountdownTimer.Listener {
             override fun onTick(millisUntilFinished: Long) {
-                _counter.value = ((millisUntilFinished) / ONE_SECOND).inc()
+                updateCounter(millisUntilFinished)
             }
 
             override fun onFinish() {
-                _comChoice.value = gameRepository.getRandomComputerChoice()
-                _result.value = gameRepository.play()
-                _score.value = gameRepository.score
+                handleTimerFinish()
                 EspressoIdlingResource.decrement()
             }
         }
+    }
+
+    private fun updateCounter(millisUntilFinished: Long) {
+        _counter.value = ((millisUntilFinished) / ONE_SECOND).inc()
+    }
+
+    private fun handleTimerFinish() {
+        _comChoice.value = gameRepository.getRandomComputerChoice()
+        _result.value = gameRepository.play()
+        _score.value = gameRepository.score
     }
 
     fun playGame() {

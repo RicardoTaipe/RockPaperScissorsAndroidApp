@@ -72,7 +72,7 @@ class GameViewModelTest {
     }
 
     @Test
-    fun `GIVEN a choice is selected WHEN selectOption is called THEN the onFinish listener is triggered and the computer's choice, user and score are set`() {
+    fun `GIVEN a choice is selected WHEN selectOption is called THEN the onFinish listener is triggered and the computer's choice, user and score are reset`() {
         // GIVEN
         val testChoice = Choice.ROCK
         mockTimer.typeListener = OnFinish
