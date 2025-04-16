@@ -1,10 +1,14 @@
 package com.example.rockpaperscissorsapp
 
+import android.os.Build
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.NavHostFragment
 import com.example.rockpaperscissorsapp.databinding.ActivityMainBinding
@@ -25,8 +29,28 @@ class MainActivity : AppCompatActivity() {
             RulesFragment().show(supportFragmentManager, RulesFragment.TAG)
         }
         installSplashScreen()
-        enableEdgeToEdge()
-
+        fixInsetsForEdgeToEdge()
+        setStatusBarAppearance()
     }
 
+    private fun fixInsetsForEdgeToEdge() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.appContainer) { v, insets ->
+            val innerPadding =
+                insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
+            v.updatePadding(
+                innerPadding.left,
+                innerPadding.top,
+                innerPadding.right,
+                innerPadding.bottom
+            )
+            WindowInsetsCompat.CONSUMED
+        }
+    }
+
+    private fun setStatusBarAppearance() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars =
+                false
+        }
+    }
 }
