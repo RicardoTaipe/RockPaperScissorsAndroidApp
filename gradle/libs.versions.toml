@@ -4,7 +4,6 @@ appcompat = "1.7.0"
 constraintlayout = "2.2.0"
 coreSplashscreen = "1.0.1"
 coreTesting = "2.2.0"
-dexmakerMockito = "2.28.1"
 espressoIdlingResource = "3.6.1"
 fragmentTesting = "1.8.5"
 kotlin = "1.9.0"
@@ -15,8 +14,8 @@ espressoCore = "3.5.0"
 kotlinxCoroutinesTest = "1.9.0"
 lifecycleRuntimeKtx = "2.8.7"
 material = "1.12.0"
-mockitoCore = "4.8.0"
-mockitoInline = "2.13.0"
+mockitoCore = "5.17.0"
+mockitoInline = "5.2.0"
 navigationFragmentKtx = "2.8.5"
 [libraries]
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
@@ -29,13 +28,13 @@ androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref
 androidx-fragment-testing = { module = "androidx.fragment:fragment-testing", version.ref = "fragmentTesting" }
 androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationFragmentKtx" }
-dexmaker-mockito = { module = "com.linkedin.dexmaker:dexmaker-mockito", version.ref = "dexmakerMockito" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
+mockito-android = { module = "org.mockito:mockito-android", version.ref = "mockitoCore" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
 mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockitoInline" }
 [plugins]

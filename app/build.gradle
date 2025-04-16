@@ -81,9 +81,6 @@ dependencies {
     //instrumented test
     androidTestImplementation libs.androidx.junit
     androidTestImplementation libs.androidx.espresso.core
+    androidTestImplementation libs.mockito.android
     androidTestImplementation libs.mockito.core
-    androidTestImplementation libs.dexmaker.mockito
-
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
 }
