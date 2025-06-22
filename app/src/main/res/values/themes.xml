@@ -14,9 +14,16 @@
         <!-- Customize your theme here. -->
         <item name="android:fontFamily">@font/barlow_semi_condensed_semibold</item>
         <item name="fontFamily">@font/barlow_semi_condensed_semibold</item>
+
+        <item name="android:dialogTheme">@style/Theme.DialogFullScreen</item>
     </style>
 
     <style name="Circular">
         <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="Theme.DialogFullScreen" parent="@style/ThemeOverlay.MaterialComponents.Dialog.Alert">
+        <item name="android:windowMinWidthMajor">100%</item>
+        <item name="android:windowMinWidthMinor">100%</item>
     </style>
 </resources>
