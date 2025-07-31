@@ -20,6 +20,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.rockpaperscissorsapp.R
+import com.example.rockpaperscissorsapp.ui.theme.DarkTextColor
+import com.example.rockpaperscissorsapp.ui.theme.MyApplicationTheme
 import com.example.rockpaperscissorsapp.utils.PainterResourceUtil.resolvePainter
 
 @Composable
@@ -34,15 +36,16 @@ fun RulesScreen(onDismissRequest: () -> Unit) {
                 .padding(32.dp)
                 .safeDrawingPadding()
         ) {
-            // Rules Text
+
             Text(
                 text = stringResource(id = R.string.rules),
-                style = MaterialTheme.typography.headlineMedium,
+                style = MaterialTheme.typography.displayMedium,
                 modifier = Modifier
-                    .align(Alignment.TopCenter)
+                    .align(Alignment.TopCenter),
+                color = DarkTextColor
             )
 
-            // Rules Image
+
             Image(
                 painter = resolvePainter(id = R.drawable.image_rules),
                 contentDescription = stringResource(id = R.string.rules_image),
@@ -52,7 +55,7 @@ fun RulesScreen(onDismissRequest: () -> Unit) {
                     .align(Alignment.Center)
             )
 
-            // Close Button
+
             Image(
                 painter = resolvePainter(id = R.drawable.icon_close),
                 contentDescription = stringResource(id = R.string.close_button),
@@ -68,5 +71,7 @@ fun RulesScreen(onDismissRequest: () -> Unit) {
 @Preview
 @Composable
 private fun RulesScreenPreview() {
-    RulesScreen {}
+    MyApplicationTheme {
+        RulesScreen {}
+    }
 }

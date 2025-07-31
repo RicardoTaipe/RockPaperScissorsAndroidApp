@@ -50,41 +50,41 @@ class GameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         gameViewModel.playGame()
-
-        gameViewModel.yourChoice.observe(viewLifecycleOwner) { choice ->
-            choice?.let { setUiData(binding.userChoice, it) }
-        }
-
-        gameViewModel.comChoice.observe(viewLifecycleOwner) { choice ->
-            choice?.let {
-                setUiData(binding.comChoice, it)
-                binding.apply {
-                    comChoice.isVisible = true
-                    timer.isInvisible = true
-                }
-            }
-        }
+//
+//        gameViewModel.yourChoice.observe(viewLifecycleOwner) { choice ->
+//            choice?.let { setUiData(binding.userChoice, it) }
+//        }
+//
+//        gameViewModel.comChoice.observe(viewLifecycleOwner) { choice ->
+//            choice?.let {
+//                setUiData(binding.comChoice, it)
+//                binding.apply {
+//                    comChoice.isVisible = true
+//                    timer.isInvisible = true
+//                }
+//            }
+//        }
 
         binding.playAgain.setOnClickListener {
             gameViewModel.resetGame()
             findNavController().navigate(GameFragmentDirections.actionGameFragmentToPlayFragment())
         }
 
-        gameViewModel.result.observe(viewLifecycleOwner) { gameResult ->
-            gameResult?.let {
-                with(binding) {
-                    result.text = getString(
-                        when (it) {
-                            Result.WIN -> R.string.you_win
-                            Result.DRAW -> R.string.draw
-                            Result.LOSE -> R.string.you_lose
-                        }
-                    )
-                    result.isVisible = true
-                    binding.playAgain.isVisible = true
-                }
-            }
-        }
+//        gameViewModel.result.observe(viewLifecycleOwner) { gameResult ->
+//            gameResult?.let {
+//                with(binding) {
+//                    result.text = getString(
+//                        when (it) {
+//                            Result.WIN -> R.string.you_win
+//                            Result.DRAW -> R.string.draw
+//                            Result.LOSE -> R.string.you_lose
+//                        }
+//                    )
+//                    result.isVisible = true
+//                    binding.playAgain.isVisible = true
+//                }
+//            }
+//        }
     }
 
     private fun setUiData(view: ShapeableImageView, data: Choice) {

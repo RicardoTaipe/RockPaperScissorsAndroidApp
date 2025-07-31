@@ -15,7 +15,7 @@ class PlayViewModel(
     ViewModel() {
 
     fun selectOption(option: Choice) {
-        gameRepository.userChoice = option
+        gameRepository.setUserChoice(option)
     }
 
     companion object {

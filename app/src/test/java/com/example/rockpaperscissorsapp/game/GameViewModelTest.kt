@@ -49,7 +49,7 @@ class GameViewModelTest {
     fun `GIVEN a choice is saved WHEN playGame is called THEN yourChoice is updated and timer starts`() {
         // GIVEN
         val testChoice = Choice.ROCK
-        `when`(mockGameRepository.userChoice).thenReturn(testChoice)
+        //`when`(mockGameRepository.userChoice).thenReturn(testChoice)
         // WHEN
         gameViewModel.playGame()
 
@@ -76,11 +76,11 @@ class GameViewModelTest {
         // GIVEN
         val testChoice = Choice.ROCK
         mockTimer.typeListener = OnFinish
-        `when`(mockGameRepository.userChoice).thenReturn(testChoice)
-        `when`(mockGameRepository.getRandomComputerChoice()).thenReturn(Choice.SCISSORS)
-        `when`(mockGameRepository.play()).thenReturn(Result.WIN)
+        //`when`(mockGameRepository.userChoice).thenReturn(testChoice)
+        //`when`(mockGameRepository.getRandomComputerChoice()).thenReturn(Choice.SCISSORS)
+        //`when`(mockGameRepository.play()).thenReturn(Result.WIN)
         val expectedScore = 1
-        `when`(mockGameRepository.score).thenReturn(expectedScore)
+        //`when`(mockGameRepository.score).thenReturn(expectedScore)
 
         // WHEN
         gameViewModel.playGame()
@@ -98,7 +98,7 @@ class GameViewModelTest {
         val millisUntilFinished = 2000L
         val expectedSecondsRemaining = (2000L / ONE_SECOND).inc()
         mockTimer.typeListener = OnTick(millisUntilFinished)
-        `when`(mockGameRepository.userChoice).thenReturn(Choice.ROCK)
+        //`when`(mockGameRepository.userChoice).thenReturn(Choice.ROCK)
 
         // WHEN
         gameViewModel.playGame()

@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.example.myapplication.ui.theme.MyApplicationTheme
+import com.example.rockpaperscissorsapp.ui.theme.MyApplicationTheme
 
 class MainActivity : AppCompatActivity() {
 
@@ -13,10 +13,9 @@ class MainActivity : AppCompatActivity() {
         installSplashScreen()
         setContent {
             MyApplicationTheme {
-                MainScreen()
+                RockPaperScissorsApp()
             }
         }
-
     }
 }
 
