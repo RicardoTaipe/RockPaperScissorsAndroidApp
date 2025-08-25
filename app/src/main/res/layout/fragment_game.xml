@@ -49,7 +49,7 @@
             android:layout_height="0dp"
             android:background="@drawable/bg_timer"
             android:gravity="center"
-            android:text="@{viewModel.counter}"
+            android:text="@{viewModel.counter.toString()}"
             android:textAlignment="center"
             android:textAppearance="?attr/textAppearanceHeadline4"
             android:textColor="@color/white"

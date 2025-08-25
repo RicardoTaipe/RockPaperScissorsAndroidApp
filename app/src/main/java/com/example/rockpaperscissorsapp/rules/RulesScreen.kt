@@ -3,11 +3,14 @@ package com.example.rockpaperscissorsapp.rules
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,19 +32,20 @@ fun RulesScreen(onDismissRequest: () -> Unit) {
     Dialog(
         onDismissRequest = {}
     ) {
-        Box(
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.White)
                 .padding(32.dp)
                 .safeDrawingPadding()
+                .verticalScroll(rememberScrollState())
         ) {
 
             Text(
                 text = stringResource(id = R.string.rules),
                 style = MaterialTheme.typography.displayMedium,
-                modifier = Modifier
-                    .align(Alignment.TopCenter),
                 color = DarkTextColor
             )
 
@@ -52,7 +56,7 @@ fun RulesScreen(onDismissRequest: () -> Unit) {
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .align(Alignment.Center)
+
             )
 
 
@@ -60,13 +64,11 @@ fun RulesScreen(onDismissRequest: () -> Unit) {
                 painter = resolvePainter(id = R.drawable.icon_close),
                 contentDescription = stringResource(id = R.string.close_button),
                 modifier = Modifier
-                    .align(Alignment.BottomCenter)
                     .clickable(onClick = onDismissRequest)
             )
         }
     }
 }
-
 
 @Preview
 @Composable

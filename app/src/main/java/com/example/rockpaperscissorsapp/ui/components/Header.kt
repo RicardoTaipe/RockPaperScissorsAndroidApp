@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,22 +17,27 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.rockpaperscissorsapp.R
 import com.example.rockpaperscissorsapp.ui.theme.BorderColor
 import com.example.rockpaperscissorsapp.ui.theme.DarkTextColor
 import com.example.rockpaperscissorsapp.ui.theme.MyApplicationTheme
 import com.example.rockpaperscissorsapp.ui.theme.ScoreBoxColor
 import com.example.rockpaperscissorsapp.ui.theme.ScoreTextColor
+import com.example.rockpaperscissorsapp.ui.theme.largeRadialGradient
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Header(score: Int) {
+fun Header(modifier: Modifier = Modifier, score: String) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .windowInsetsPadding(TopAppBarDefaults.windowInsets)
             .border(2.dp, BorderColor, RoundedCornerShape(12.dp))
@@ -42,7 +46,7 @@ fun Header(score: Int) {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = "ROCK\nPAPER\nSCISSORS",
+            text = stringResource(R.string.logo),
             color = Color.White,
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
@@ -59,13 +63,13 @@ fun Header(score: Int) {
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "SCORE",
+                text = stringResource(R.string.score),
                 color = ScoreTextColor,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = score.toString(),
+                text = score,
                 color = DarkTextColor,
                 fontSize = 48.sp,
                 fontWeight = FontWeight.ExtraBold
@@ -78,7 +82,7 @@ fun Header(score: Int) {
 @Composable
 private fun HeaderPreview() {
     MyApplicationTheme {
-        Header(1)
+        Header(score = "0", modifier = Modifier.background(brush = largeRadialGradient))
     }
-    
+
 }

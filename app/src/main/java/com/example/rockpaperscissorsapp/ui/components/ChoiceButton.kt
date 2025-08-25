@@ -7,6 +7,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,6 +21,11 @@ import com.example.rockpaperscissorsapp.R
 import com.example.rockpaperscissorsapp.data.Choice
 import com.example.rockpaperscissorsapp.ui.theme.ChoiceButtonInnerCircle
 import com.example.rockpaperscissorsapp.ui.theme.ChoiceButtonOuterRed
+import com.example.rockpaperscissorsapp.ui.theme.DarkTextColor
+import com.example.rockpaperscissorsapp.ui.theme.RulesButtonTextColor
+
+private val OUTER_CIRCLE_SIZE = 130.dp
+private val INNER_CIRCLE_SIZE = 100.dp
 
 @Composable
 fun ChoiceButton(
@@ -30,7 +37,7 @@ fun ChoiceButton(
 ) {
     Box(
         modifier = modifier
-            .size(130.dp) // Outer circle size
+            .size(OUTER_CIRCLE_SIZE)
             .clip(CircleShape)
             .background(outerColor)
             .clickable(onClick = onClick),
@@ -38,13 +45,33 @@ fun ChoiceButton(
     ) {
         Box(
             modifier = Modifier
-                .size(100.dp) // Inner circle size
+                .size(INNER_CIRCLE_SIZE)
                 .clip(CircleShape)
                 .background(ChoiceButtonInnerCircle),
             contentAlignment = Alignment.Center
         ) {
             Image(painter = painterResource(iconResId), contentDescription = contentDescription)
         }
+    }
+}
+
+@Composable
+fun HouseButton(
+    modifier: Modifier = Modifier,
+    counter: Long
+) {
+    Box(
+        modifier = modifier
+            .size(OUTER_CIRCLE_SIZE)
+            .clip(CircleShape)
+            .background(DarkTextColor),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = counter.toString(),
+            color = RulesButtonTextColor,
+            style = MaterialTheme.typography.displayMedium
+        )
     }
 }
 
@@ -56,4 +83,10 @@ private fun ChoiceButtonPreview() {
         iconResId = R.drawable.icon_rock,
         contentDescription = Choice.ROCK.name,
     )
+}
+
+@Preview
+@Composable
+private fun HouseButtonPreview() {
+    HouseButton(counter = 3)
 }

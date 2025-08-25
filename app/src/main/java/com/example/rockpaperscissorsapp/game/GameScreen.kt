@@ -24,7 +24,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -33,8 +32,10 @@ import com.example.rockpaperscissorsapp.R
 import com.example.rockpaperscissorsapp.data.Choice
 import com.example.rockpaperscissorsapp.data.Result
 import com.example.rockpaperscissorsapp.ui.components.ChoiceButton
+import com.example.rockpaperscissorsapp.ui.components.HouseButton
 import com.example.rockpaperscissorsapp.ui.theme.ChoiceButtonOuterBlue
 import com.example.rockpaperscissorsapp.ui.theme.ChoiceButtonOuterOrange
+import com.example.rockpaperscissorsapp.ui.theme.ChoiceButtonOuterRed
 import com.example.rockpaperscissorsapp.ui.theme.MyApplicationTheme
 import com.example.rockpaperscissorsapp.ui.theme.PlayAgainButtonColor
 import com.example.rockpaperscissorsapp.ui.theme.PlayAgainButtonTextColor
@@ -44,14 +45,18 @@ import com.example.rockpaperscissorsapp.ui.theme.largeRadialGradient
 fun GameRoute(modifier: Modifier = Modifier, onPlayAgain: () -> Unit) {
     val gameViewModel: GameViewModel = viewModel(factory = GameViewModel.Factory)
     LaunchedEffect(Unit) {
-        gameViewModel.playGame()
+        if (gameViewModel.isGameOver.value.not()) {
+            gameViewModel.playGame()
+        }
     }
 
     val userChoice by gameViewModel.yourChoice.collectAsStateWithLifecycle()
     val comChoice by gameViewModel.comChoice.collectAsStateWithLifecycle()
     val result by gameViewModel.result.collectAsStateWithLifecycle()
+    val counter by gameViewModel.counter.collectAsStateWithLifecycle()
+    val isGameOver by gameViewModel.isGameOver.collectAsStateWithLifecycle()
 
-    GameScreen(userChoice, comChoice, result, modifier){
+    GameScreen(userChoice, comChoice, result, counter, isGameOver, modifier) {
         gameViewModel.resetGame()
         onPlayAgain.invoke()
     }
@@ -60,9 +65,11 @@ fun GameRoute(modifier: Modifier = Modifier, onPlayAgain: () -> Unit) {
 
 @Composable
 private fun GameScreen(
-    userChoice: Choice, // Pass the user's choice (Rock, Paper, or Scissors)
-    houseChoice: Choice, // Pass the house's choice
+    userChoice: Choice,
+    houseChoice: Choice,
     result: Result,
+    counter: Long,
+    isGameOver: Boolean,
     modifier: Modifier = Modifier,
     onPlayAgain: () -> Unit
 ) {
@@ -82,11 +89,13 @@ private fun GameScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                ChoiceButton(
-                    outerColor = ChoiceButtonOuterBlue,
-                    iconResId = getIconForChoice(userChoice),
-                    contentDescription = userChoice.name
-                )
+                getIconAndColorForChoice(userChoice).let { (icon, color) ->
+                    ChoiceButton(
+                        outerColor = color,
+                        iconResId = icon,
+                        contentDescription = userChoice.name
+                    )
+                }
                 Spacer(modifier = Modifier.height(24.dp))
                 Text(
                     text = stringResource(R.string.you_picked),
@@ -101,11 +110,17 @@ private fun GameScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                ChoiceButton(
-                    outerColor = ChoiceButtonOuterOrange,
-                    iconResId = getIconForChoice(houseChoice),
-                    contentDescription = houseChoice.name
-                )
+                if (isGameOver) {
+                    getIconAndColorForChoice(houseChoice).let { (icon, color) ->
+                        ChoiceButton(
+                            outerColor = color,
+                            iconResId = icon,
+                            contentDescription = houseChoice.name
+                        )
+                    }
+                } else {
+                    HouseButton(counter = counter)
+                }
                 Spacer(modifier = Modifier.height(24.dp))
                 Text(
                     text = stringResource(R.string.the_house_picked),
@@ -118,60 +133,61 @@ private fun GameScreen(
 
         Spacer(modifier = Modifier.height(64.dp))
 
-        // Win/Lose/Draw Message
-        Text(
-            text = stringResource(
-                when (result) {
-                    Result.WIN -> R.string.you_win
-                    Result.DRAW -> R.string.draw
-                    Result.LOSE -> R.string.you_lose
+        if (isGameOver) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = stringResource(
+                        when (result) {
+                            Result.WIN -> R.string.you_win
+                            Result.DRAW -> R.string.draw
+                            Result.LOSE -> R.string.you_lose
+                        }
+                    ),
+                    color = Color.White, fontSize = 64.sp, fontWeight = FontWeight.ExtraBold
+                )
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                Button(
+                    onClick = onPlayAgain,
+                    modifier = Modifier
+                        .width(220.dp)
+                        .height(50.dp)
+                        .clip(RoundedCornerShape(8.dp)),
+                    colors = ButtonDefaults.buttonColors(containerColor = PlayAgainButtonColor),
+                    shape = RoundedCornerShape(8.dp),
+                    contentPadding = PaddingValues(0.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.play_again),
+                        color = PlayAgainButtonTextColor,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
-            ),
-            color = Color.White, fontSize = 64.sp, fontWeight = FontWeight.ExtraBold
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        // Play Again Button
-        Button(
-            onClick = onPlayAgain,
-            modifier = Modifier
-                .width(220.dp)
-                .height(50.dp)
-                .clip(RoundedCornerShape(8.dp)),
-            colors = ButtonDefaults.buttonColors(containerColor = PlayAgainButtonColor),
-            shape = RoundedCornerShape(8.dp),
-            contentPadding = PaddingValues(0.dp)
-        ) {
-            Text(
-                text = stringResource(R.string.play_again),
-                color = PlayAgainButtonTextColor,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
-            )
+            }
         }
     }
 }
 
-private fun getIconForChoice(data: Choice): Int {
-    return when (data) {
-        Choice.ROCK -> R.drawable.icon_rock
-        Choice.PAPER -> R.drawable.icon_paper
-        Choice.SCISSORS -> R.drawable.icon_scissors
-    }
+private fun getIconAndColorForChoice(choice: Choice) = when (choice) {
+    Choice.ROCK -> R.drawable.icon_rock to ChoiceButtonOuterRed
+    Choice.PAPER -> R.drawable.icon_paper to ChoiceButtonOuterOrange
+    Choice.SCISSORS -> R.drawable.icon_scissors to ChoiceButtonOuterBlue
 }
 
 @Preview(showBackground = true)
-@PreviewScreenSizes
 @Composable
 fun PreviewWinScreen() {
     MyApplicationTheme {
         GameScreen(
             userChoice = Choice.ROCK,
             houseChoice = Choice.SCISSORS,
-            onPlayAgain = {},
             result = Result.WIN,
-            modifier = Modifier.background(brush = largeRadialGradient)
+            counter = 3,
+            isGameOver = true,
+            modifier = Modifier.background(brush = largeRadialGradient),
+            onPlayAgain = {}
         )
     }
 }

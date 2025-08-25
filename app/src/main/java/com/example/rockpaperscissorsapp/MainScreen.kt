@@ -31,11 +31,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.rockpaperscissorsapp.game.GameRoute
+import com.example.rockpaperscissorsapp.game.GameViewModel
 import com.example.rockpaperscissorsapp.play.PlayGameRoute
 import com.example.rockpaperscissorsapp.rules.RulesScreen
 import com.example.rockpaperscissorsapp.ui.components.Header
@@ -46,14 +49,17 @@ import com.example.rockpaperscissorsapp.ui.theme.largeRadialGradient
 
 @Composable
 fun RockPaperScissorsApp(
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    gameViewModel: GameViewModel = viewModel(factory = GameViewModel.Factory)
 ) {
+
     var openAlertDialog by remember { mutableStateOf(false) }
+    val score by gameViewModel.score.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
             Row(Modifier.padding(horizontal = 24.dp, vertical = 32.dp)) {
-                Header(score = 0)
+                Header(score = score)
             }
         },
         bottomBar = {

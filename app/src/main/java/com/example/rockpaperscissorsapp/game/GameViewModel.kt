@@ -17,6 +17,7 @@ import com.example.rockpaperscissorsapp.utils.EspressoIdlingResource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
@@ -36,12 +37,11 @@ class GameViewModel(
         SharingStarted.Eagerly,
         gameRepository.score.value.toString()
     )
+    private val _isGameOver: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val isGameOver: StateFlow<Boolean> = _isGameOver
 
-    private val _counter = MutableStateFlow(TOTAL_TIME_TIMER)
-    val counter: StateFlow<String> = _counter
-        .map { it.toString() }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, _counter.value.toString())
-
+    private val _counter: MutableStateFlow<Long> = MutableStateFlow(TOTAL_TIME_TIMER)
+    val counter: StateFlow<Long> = _counter
 
     private fun setTimerListener() {
         timer.listener = object : ShadowCountdownTimer.Listener {
@@ -51,6 +51,7 @@ class GameViewModel(
 
             override fun onFinish() {
                 gameRepository.play()
+                _isGameOver.value = true
                 EspressoIdlingResource.decrement()
             }
         }
