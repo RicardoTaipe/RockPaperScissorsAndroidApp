@@ -74,6 +74,7 @@ private fun GameScreen(
     onPlayAgain: () -> Unit
 ) {
     Column(
+        verticalArrangement = Arrangement.Center,
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {

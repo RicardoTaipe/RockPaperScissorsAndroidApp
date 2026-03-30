@@ -30,7 +30,7 @@ import com.example.rockpaperscissorsapp.utils.PainterResourceUtil.resolvePainter
 @Composable
 fun RulesScreen(onDismissRequest: () -> Unit) {
     Dialog(
-        onDismissRequest = {}
+        onDismissRequest = onDismissRequest
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -54,8 +54,7 @@ fun RulesScreen(onDismissRequest: () -> Unit) {
                 painter = resolvePainter(id = R.drawable.image_rules),
                 contentDescription = stringResource(id = R.string.rules_image),
                 contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxWidth()
+                modifier = Modifier.fillMaxWidth()
 
             )
 

@@ -14,13 +14,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -53,7 +56,7 @@ fun RockPaperScissorsApp(
     gameViewModel: GameViewModel = viewModel(factory = GameViewModel.Factory)
 ) {
 
-    var openAlertDialog by remember { mutableStateOf(false) }
+    var showRulesDialog by remember { mutableStateOf(false) }
     val score by gameViewModel.score.collectAsStateWithLifecycle()
 
     Scaffold(
@@ -70,7 +73,9 @@ fun RockPaperScissorsApp(
                     .safeDrawingPadding()
                     .padding(horizontal = 24.dp, vertical = 32.dp)
             ) {
-                RulesButton { openAlertDialog = true }
+                RulesButton {
+                    showRulesDialog = true
+                }
             }
         }
     ) { innerPadding ->
@@ -86,7 +91,7 @@ fun RockPaperScissorsApp(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
 
-                Spacer(modifier = Modifier.height(64.dp))
+                //Spacer(modifier = Modifier.height(64.dp))
 
                 NavHost(
                     navController = navController,
@@ -105,8 +110,8 @@ fun RockPaperScissorsApp(
                     }
                 }
 
-                if (openAlertDialog) {
-                    RulesScreen { openAlertDialog = false }
+                if (showRulesDialog) {
+                    RulesScreen { showRulesDialog = false }
                 }
             }
         }

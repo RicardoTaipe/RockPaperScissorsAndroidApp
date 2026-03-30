@@ -8,5 +8,3 @@ object PlayRoute
 
 @Serializable
 object GameRoute
-//data class GameRoute(val choice: Choice)
-
