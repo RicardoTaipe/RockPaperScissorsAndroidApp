@@ -1,84 +1,134 @@
 package com.example.rockpaperscissorsapp.game
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.rockpaperscissorsapp.RockPaperScissorsApplication
-import com.example.rockpaperscissorsapp.countdown.MyCountDownTimer.Companion.ONE_SECOND
-import com.example.rockpaperscissorsapp.countdown.MyCountDownTimer.Companion.TOTAL_TIME_TIMER
-import com.example.rockpaperscissorsapp.countdown.ShadowCountdownTimer
-import com.example.rockpaperscissorsapp.data.Choice
-import com.example.rockpaperscissorsapp.data.GameRepository
-import com.example.rockpaperscissorsapp.data.Result
-import com.example.rockpaperscissorsapp.utils.EspressoIdlingResource
+import com.example.rockpaperscissorsapp.data.GameResult
+import com.example.rockpaperscissorsapp.data.Move
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class GameViewModel(
-    private val gameRepository: GameRepository,
-    private val timer: ShadowCountdownTimer
-) : ViewModel() {
+private const val ONE_SECOND = 1000L
+private const val COUNTDOWN_START = 3
 
-    val yourChoice: StateFlow<Choice> = gameRepository.userChoice
+data class GameScreenState(
+    val game: GameUiState = GameUiState.WaitingForPlayer(),
+    val isRulesDialogOpen: Boolean = false
+)
 
-    val comChoice: StateFlow<Choice> = gameRepository.computerChoice
+sealed class GameUiState {
+    abstract val score: Int
 
-    val result: StateFlow<Result> = gameRepository.result
+    data class WaitingForPlayer(override val score: Int = 0) : GameUiState()
 
-    val score: StateFlow<String> = gameRepository.score.map { it.toString() }.stateIn(
-        viewModelScope,
-        SharingStarted.Eagerly,
-        gameRepository.score.value.toString()
-    )
-    private val _isGameOver: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val isGameOver: StateFlow<Boolean> = _isGameOver
+    data class WaitingForOpponent(
+        val playerMove: Move,
+        val countdown: Int?,
+        override val score: Int,
+    ) : GameUiState()
 
-    private val _counter: MutableStateFlow<Long> = MutableStateFlow(TOTAL_TIME_TIMER)
-    val counter: StateFlow<Long> = _counter
+    data class Result(
+        val playerMove: Move,
+        val opponentMove: Move,
+        val gameResult: GameResult,
+        override val score: Int,
+    ) : GameUiState()
+}
 
-    private fun setTimerListener() {
-        timer.listener = object : ShadowCountdownTimer.Listener {
-            override fun onTick(millisUntilFinished: Long) {
-                _counter.value = ((millisUntilFinished) / ONE_SECOND).inc()
-            }
+sealed class GameIntent {
+    data class Play(val move: Move) : GameIntent()
+    object NextRound : GameIntent()
+    object ResetGame : GameIntent()
+    object OpenRules : GameIntent()
+    object CloseRules : GameIntent()
+}
 
-            override fun onFinish() {
-                gameRepository.play()
-                _isGameOver.value = true
-                EspressoIdlingResource.decrement()
-            }
+
+class GameViewModel(private val randomGenerator: () -> Move) : ViewModel() {
+
+    private val _state = MutableStateFlow(GameScreenState())
+    val state = _state.asStateFlow()
+    private var countdownJob: Job? = null
+
+    fun process(intent: GameIntent) {
+        when (intent) {
+            is GameIntent.Play -> play(intent.move)
+            is GameIntent.NextRound -> nextRound()
+            is GameIntent.ResetGame -> resetGame()
+            GameIntent.OpenRules -> _state.update { it.copy(isRulesDialogOpen = true) }
+            GameIntent.CloseRules -> _state.update { it.copy(isRulesDialogOpen = false) }
         }
     }
 
-    fun playGame() {
-        setTimerListener()
-        timer.start()
-        EspressoIdlingResource.increment()
-    }
+    private fun play(move: Move) {
+        _state.update { current ->
+            if (current.game !is GameUiState.WaitingForPlayer) return@update current
 
-    override fun onCleared() {
-        super.onCleared()
-        timer.cancel()
-    }
-
-    fun resetGame() {
-        gameRepository.reset()
-        timer.cancel()
-    }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val container = (this[APPLICATION_KEY] as RockPaperScissorsApplication).container
-                GameViewModel(container.gameRepository, container.timer)
-            }
+            current.copy(
+                game = GameUiState.WaitingForOpponent(
+                    playerMove = move,
+                    countdown = COUNTDOWN_START,
+                    score = current.game.score
+                )
+            )
         }
+        startCountdown()
+    }
+
+    private fun startCountdown() {
+        countdownJob?.cancel()
+
+        countdownJob = viewModelScope.launch {
+            for (i in COUNTDOWN_START downTo 1) {
+                _state.update { current ->
+                    val game = current.game
+                    if (game is GameUiState.WaitingForOpponent) {
+                        current.copy(game = game.copy(countdown = i))
+                    } else {
+                        current
+                    }
+                }
+                delay(ONE_SECOND)
+            }
+            generateOpponentMove()
+        }
+    }
+
+    private fun calculateNewScore(currentScore: Int, result: GameResult): Int = when (result) {
+        GameResult.WIN -> currentScore + 1
+        GameResult.LOSE -> (currentScore - 1).coerceAtLeast(0)
+        GameResult.DRAW -> currentScore
+    }
+
+
+    private fun generateOpponentMove() {
+        val opponentMove = randomGenerator.invoke()
+        _state.update { current ->
+            val game = current.game
+            if (game !is GameUiState.WaitingForOpponent) return@update current
+            val result = game.playerMove.compare(opponentMove)
+
+            current.copy(
+                game = GameUiState.Result(
+                    playerMove = game.playerMove,
+                    opponentMove = opponentMove,
+                    gameResult = result,
+                    score = calculateNewScore(game.score, result)
+                )
+            )
+        }
+    }
+
+    private fun nextRound() {
+        countdownJob?.cancel()
+        _state.update { it.copy(game = GameUiState.WaitingForPlayer(score = it.game.score)) }
+    }
+
+    private fun resetGame() {
+        countdownJob?.cancel()
+        _state.value = GameScreenState()
     }
 }

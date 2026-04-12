@@ -12,13 +12,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -47,10 +46,8 @@ fun Header(modifier: Modifier = Modifier, score: String) {
     ) {
         Text(
             text = stringResource(R.string.logo),
-            color = Color.White,
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Bold,
-            lineHeight = 28.sp
+            style = MaterialTheme.typography.headlineSmall,
+            color = Color.White
         )
 
         Column(
@@ -65,14 +62,13 @@ fun Header(modifier: Modifier = Modifier, score: String) {
             Text(
                 text = stringResource(R.string.score),
                 color = ScoreTextColor,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
+                style = MaterialTheme.typography.labelLarge,
             )
             Text(
                 text = score,
                 color = DarkTextColor,
                 fontSize = 48.sp,
-                fontWeight = FontWeight.ExtraBold
+                style = MaterialTheme.typography.displayMedium,
             )
         }
     }

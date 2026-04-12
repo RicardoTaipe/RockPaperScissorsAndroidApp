@@ -1,68 +1,67 @@
 package com.example.rockpaperscissorsapp
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import com.example.rockpaperscissorsapp.game.GameRoute
+import com.example.rockpaperscissorsapp.data.GameResult
+import com.example.rockpaperscissorsapp.data.Move
+import com.example.rockpaperscissorsapp.game.GameIntent
+import com.example.rockpaperscissorsapp.game.GameScreen
+import com.example.rockpaperscissorsapp.game.GameScreenState
+import com.example.rockpaperscissorsapp.game.GameUiState
 import com.example.rockpaperscissorsapp.game.GameViewModel
-import com.example.rockpaperscissorsapp.play.PlayGameRoute
+import com.example.rockpaperscissorsapp.game.GameViewModelFactory
+import com.example.rockpaperscissorsapp.play.PlayGameScreen
+import com.example.rockpaperscissorsapp.result.ResultScreen
 import com.example.rockpaperscissorsapp.rules.RulesScreen
 import com.example.rockpaperscissorsapp.ui.components.Header
-import com.example.rockpaperscissorsapp.ui.theme.BorderColor
+import com.example.rockpaperscissorsapp.ui.components.RulesButton
 import com.example.rockpaperscissorsapp.ui.theme.MyApplicationTheme
-import com.example.rockpaperscissorsapp.ui.theme.RulesButtonTextColor
 import com.example.rockpaperscissorsapp.ui.theme.largeRadialGradient
 
 @Composable
 fun RockPaperScissorsApp(
-    navController: NavHostController = rememberNavController(),
-    gameViewModel: GameViewModel = viewModel(factory = GameViewModel.Factory)
+    gameViewModel: GameViewModel = viewModel(factory = GameViewModelFactory)
 ) {
+    val uiState by gameViewModel.state.collectAsStateWithLifecycle()
 
-    var showRulesDialog by remember { mutableStateOf(false) }
-    val score by gameViewModel.score.collectAsStateWithLifecycle()
+    RockPaperScissorsContent(uiState = uiState) {
+        gameViewModel.process(intent = it)
+    }
+}
 
+@Composable
+fun RockPaperScissorsContent(
+    modifier: Modifier = Modifier,
+    uiState: GameScreenState,
+    intent: (GameIntent) -> Unit = {}
+) {
+    BackHandler(enabled = uiState.game is GameUiState.WaitingForOpponent || uiState.game is GameUiState.Result) {
+        intent(GameIntent.NextRound)
+    }
     Scaffold(
+        modifier = modifier,
         topBar = {
             Row(Modifier.padding(horizontal = 24.dp, vertical = 32.dp)) {
-                Header(score = score)
+                Header(score = uiState.game.score.toString())
             }
         },
         bottomBar = {
@@ -73,9 +72,7 @@ fun RockPaperScissorsApp(
                     .safeDrawingPadding()
                     .padding(horizontal = 24.dp, vertical = 32.dp)
             ) {
-                RulesButton {
-                    showRulesDialog = true
-                }
+                RulesButton { intent(GameIntent.OpenRules) }
             }
         }
     ) { innerPadding ->
@@ -86,63 +83,72 @@ fun RockPaperScissorsApp(
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
                     .padding(innerPadding),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
 
-                //Spacer(modifier = Modifier.height(64.dp))
-
-                NavHost(
-                    navController = navController,
-                    startDestination = PlayRoute,
-                    modifier = Modifier.weight(1f).padding(horizontal = 24.dp)
-                ) {
-                    composable<PlayRoute> {
-                        PlayGameRoute { navController.navigate(GameRoute) }
-                    }
-                    composable<GameRoute> {
-                        GameRoute {
-                            navController.navigate(PlayRoute){
-                                popUpTo(PlayRoute) { inclusive = true }
-                            }
-                        }
+                when (uiState.game) {
+                    is GameUiState.WaitingForPlayer -> PlayGameScreen { intent(GameIntent.Play(move = it)) }
+                    is GameUiState.WaitingForOpponent -> GameScreen(uiState = uiState.game)
+                    is GameUiState.Result -> ResultScreen(uiState = uiState.game) {
+                        intent(
+                            GameIntent.NextRound
+                        )
                     }
                 }
 
-                if (showRulesDialog) {
-                    RulesScreen { showRulesDialog = false }
+                if (uiState.isRulesDialogOpen) {
+                    RulesScreen { intent(GameIntent.CloseRules) }
                 }
             }
         }
     }
 }
 
-@Composable
-fun RulesButton(onClick: () -> Unit) {
-    Button(
-        onClick = onClick,
-        modifier = Modifier
-            .width(160.dp)
-            .height(50.dp)
-            .border(2.dp, BorderColor, RoundedCornerShape(8.dp)),
-        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-        shape = RoundedCornerShape(8.dp),
-        contentPadding = PaddingValues(0.dp)
-    ) {
-        Text(
-            text = "RULES",
-            color = RulesButtonTextColor,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold
-        )
+private class GameScreenStatePreviewProvider : PreviewParameterProvider<GameScreenState> {
+    override val values = sequenceOf(
+        // PlayerPreview
+        GameScreenState(
+            GameUiState.WaitingForPlayer(0)
+        ),
+        // OpponentPreview
+        GameScreenState(
+            GameUiState.WaitingForOpponent(
+                playerMove = Move.ROCK,
+                countdown = 2,
+                score = 1
+            )
+        ),
+        // ResultPreview
+        GameScreenState(
+            GameUiState.Result(
+                playerMove = Move.PAPER,
+                opponentMove = Move.ROCK,
+                gameResult = GameResult.WIN,
+                score = 1
+            )
+        ),
+        // RulesPreview
+        GameScreenState(isRulesDialogOpen = true)
+    )
+
+    override fun getDisplayName(index: Int): String? {
+        return when (index) {
+            0 -> "PlayerPreview"
+            1 -> "OpponentPreview"
+            2 -> "ResultPreview"
+            3 -> "RulesPreview"
+            else -> null
+        }
     }
 }
 
 @Preview
 @Composable
-private fun MainScreenPreview() {
+private fun RockPaperScissorsContentPreview(
+    @PreviewParameter(GameScreenStatePreviewProvider::class) uiState: GameScreenState
+) {
     MyApplicationTheme {
-        RockPaperScissorsApp()
+        RockPaperScissorsContent(uiState = uiState)
     }
 }

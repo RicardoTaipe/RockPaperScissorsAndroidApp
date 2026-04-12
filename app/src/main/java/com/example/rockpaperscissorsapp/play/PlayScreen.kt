@@ -3,40 +3,28 @@ package com.example.rockpaperscissorsapp.play
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.rockpaperscissorsapp.R
-import com.example.rockpaperscissorsapp.data.Choice
-import com.example.rockpaperscissorsapp.ui.components.ChoiceButton
-import com.example.rockpaperscissorsapp.ui.theme.ChoiceButtonOuterBlue
-import com.example.rockpaperscissorsapp.ui.theme.ChoiceButtonOuterOrange
-import com.example.rockpaperscissorsapp.ui.theme.ChoiceButtonOuterRed
+import com.example.rockpaperscissorsapp.data.Move
+import com.example.rockpaperscissorsapp.ui.components.MoveButton
 import com.example.rockpaperscissorsapp.ui.theme.LineColor
 import com.example.rockpaperscissorsapp.ui.theme.largeRadialGradient
 
 @Composable
-fun PlayGameRoute(modifier: Modifier = Modifier, onNavigateToGame: () -> Unit) {
-    val playViewModel: PlayViewModel = viewModel(factory = PlayViewModel.Factory)
-    PlayGameScreen(modifier = modifier) {
-        playViewModel.selectOption(it)
-        onNavigateToGame.invoke()
-    }
-}
-
-@Composable
-fun PlayGameScreen(modifier: Modifier = Modifier, onGameChoiceSelected: (Choice) -> Unit = {}) {
+fun PlayGameScreen(modifier: Modifier = Modifier, onGameChoiceSelected: (Move) -> Unit = {}) {
     Column(
         verticalArrangement = Arrangement.Center,
         modifier = modifier
@@ -44,97 +32,56 @@ fun PlayGameScreen(modifier: Modifier = Modifier, onGameChoiceSelected: (Choice)
             .padding(horizontal = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        GameChoices(onGameChoiceSelected)
+        GameMoves(onGameChoiceSelected)
     }
 }
 
 @Composable
-fun GameChoices(onGameChoiceSelected: (Choice) -> Unit) {
-    Box(
+fun GameMoves(onMovePlayed: (Move) -> Unit) {
+    BoxWithConstraints(
         modifier = Modifier
             .fillMaxWidth()
-            .aspectRatio(1f) // Maintain square aspect ratio for the game area
+            .aspectRatio(1.1f) // Slightly taller than wide for the triangle shape
     ) {
-        // Define positions for each choice button relative to the Box
-        // These offsets are approximate and may need fine-tuning for pixel-perfect match
-        val paperOffset = Modifier
-            .align(Alignment.TopStart)
-            .offset(x = (-20).dp, y = 10.dp)
-        val scissorsOffset = Modifier
-            .align(Alignment.TopEnd)
-            .offset(x = 20.dp, y = 10.dp)
-        val rockOffset = Modifier
-            .align(Alignment.BottomCenter)
-            .offset(y = (-20).dp)
+        val width = constraints.maxWidth.toFloat()
+        val height = constraints.maxHeight.toFloat()
 
-        // Draw connecting lines
         Canvas(modifier = Modifier.fillMaxSize()) {
-            val centerX = size.width / 2
-            val centerY = size.height / 2
+            val strokeWidth = 15.dp.toPx()
 
-            // Calculate exact centers of the buttons for drawing lines
-            // Assuming button radius is about 60.dp (120.dp diameter)
-            val buttonRadiusPx = 60.dp.toPx()
+            // Define relative center points
+            val paperPoint = Offset(width * 0.2f, height * 0.25f)
+            val scissorsPoint = Offset(width * 0.8f, height * 0.25f)
+            val rockPoint = Offset(width * 0.5f, height * 0.8f)
 
-            val paperX = 0f + buttonRadiusPx // Top-left button's center X
-            val paperY = 0f + buttonRadiusPx // Top-left button's center Y
-
-            val scissorsX = size.width - buttonRadiusPx // Top-right button's center X
-            val scissorsY = 0f + buttonRadiusPx // Top-right button's center Y
-
-            val rockX = centerX // Bottom-center button's center X
-            val rockY = size.height - buttonRadiusPx // Bottom-center button's center Y
-
-            val strokeWidth = 8.dp.toPx() // Line thickness
-
-            // Line from Paper to Scissors
-            drawLine(
+            // Draw the triangle path
+            drawPath(
+                path = Path().apply {
+                    moveTo(paperPoint.x, paperPoint.y)
+                    lineTo(scissorsPoint.x, scissorsPoint.y)
+                    lineTo(rockPoint.x, rockPoint.y)
+                    close()
+                },
                 color = LineColor,
-                start = Offset(paperX, paperY),
-                end = Offset(scissorsX, scissorsY),
-                strokeWidth = strokeWidth
-            )
-
-            // Line from Paper to Rock
-            drawLine(
-                color = LineColor,
-                start = Offset(paperX, paperY),
-                end = Offset(rockX, rockY),
-                strokeWidth = strokeWidth
-            )
-
-            // Line from Scissors to Rock
-            drawLine(
-                color = LineColor,
-                start = Offset(scissorsX, scissorsY),
-                end = Offset(rockX, rockY),
-                strokeWidth = strokeWidth
+                style = Stroke(width = strokeWidth, join = StrokeJoin.Round)
             )
         }
 
-        ChoiceButton(
-            modifier = paperOffset,
-            outerColor = ChoiceButtonOuterBlue,
-            iconResId = R.drawable.icon_paper,
-            contentDescription = Choice.PAPER.name,
-            onClick = { onGameChoiceSelected.invoke(Choice.PAPER) }
+        val movePositions = listOf(
+            Move.PAPER to Alignment.TopStart,
+            Move.SCISSORS to Alignment.TopEnd,
+            Move.ROCK to Alignment.BottomCenter
         )
 
-        ChoiceButton(
-            modifier = scissorsOffset,
-            outerColor = ChoiceButtonOuterOrange,
-            iconResId = R.drawable.icon_scissors,
-            contentDescription = Choice.SCISSORS.name,
-            onClick = { onGameChoiceSelected.invoke(Choice.SCISSORS) }
-        )
-
-        ChoiceButton(
-            modifier = rockOffset,
-            outerColor = ChoiceButtonOuterRed,
-            iconResId = R.drawable.icon_rock,
-            contentDescription = Choice.ROCK.name,
-            onClick = { onGameChoiceSelected.invoke(Choice.ROCK) }
-        )
+        movePositions.forEach { (move, alignment) ->
+            MoveButton(
+                move = move,
+                modifier = Modifier.align(alignment),
+                isAnimationEnabled = true,
+                contentDescription = move.name,
+                onClick = { onMovePlayed(move) }
+            )
+        }
     }
 }
 

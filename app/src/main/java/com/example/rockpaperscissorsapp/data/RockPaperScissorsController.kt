@@ -1,5 +1,6 @@
 package com.example.rockpaperscissorsapp.data
 
+import com.example.rockpaperscissorsapp.game.GameIntent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -37,16 +38,15 @@ data class GameUiState(
 )
 
 data class Score(
-    val wins: Int = 0,
-    val losses: Int = 0,
-    val draws: Int = 0
+    val value: Int = 0
 ) {
     fun add(result: GameResult): Score {
-        return when (result) {
-            GameResult.WIN -> copy(wins = wins + 1)
-            GameResult.LOSE -> copy(losses = losses + 1)
-            GameResult.DRAW -> copy(draws = draws + 1)
+        val newValue = when (result) {
+            GameResult.WIN -> value + 1
+            GameResult.LOSE -> (value - 1).coerceAtLeast(0)
+            GameResult.DRAW -> value
         }
+        return copy(value = newValue)
     }
 }
 
@@ -56,10 +56,6 @@ data class Round(
     val result: GameResult
 )
 
-enum class Move { ROCK, PAPER, SCISSORS }
-
-enum class GameResult { WIN, LOSE, DRAW }
-
 enum class GameState {
     IDLE,
     WAITING_FOR_PLAYER,
@@ -68,13 +64,6 @@ enum class GameState {
 }
 
 // MVI ARCHITECTURE ------------
-sealed class GameIntent {
-    object StartGame : GameIntent()
-    data class Play(val move: Move) : GameIntent()
-    object NextRound : GameIntent()
-    object ResetGame : GameIntent()
-}
-
 class RockPaperScissorsMVI(
     private val dispatcher: CoroutineDispatcher
 ) {
@@ -88,10 +77,12 @@ class RockPaperScissorsMVI(
 
     fun process(intent: GameIntent) {
         when (intent) {
-            is GameIntent.StartGame -> startGame()
+            //is GameIntent.StartGame -> startGame()
             is GameIntent.Play -> play(intent.move)
             is GameIntent.NextRound -> nextRound()
             is GameIntent.ResetGame -> resetGame()
+            GameIntent.OpenRules -> TODO()
+            GameIntent.CloseRules -> TODO()
         }
     }
 
@@ -194,37 +185,3 @@ class RockPaperScissorsMVI(
         }
     }
 }
-
-/***
-
-@Composable
-fun GameScreen(viewModel: RockPaperScissorsViewModel) {
-
-val state by viewModel.uiState.collectAsState()
-
-when (state.state) {
-GameState.WAITING_FOR_PLAYER -> {
-Button(onClick = { viewModel.play(Move.ROCK) }) {
-Text("Rock")
-}
-}
-
-GameState.WAITING_FOR_OPPONENT -> {
-Text("Thinking... ${state.countdown ?: ""}")
-}
-
-GameState.RESULT -> {
-Text("Result: ${state.rounds.lastOrNull()?.result}")
-Button(onClick = { viewModel.nextRound() }) {
-Text("Next Round")
-}
-}
-
-else -> {
-Button(onClick = { viewModel.startGame() }) {
-Text("Start Game")
-}
-}
-}
-}
- */

@@ -10,12 +10,10 @@ import androidx.compose.ui.unit.sp
 import com.example.rockpaperscissorsapp.R
 
 val barlowFamily = FontFamily(
-    Font(R.font.barlow_semi_condensed_semibold, FontWeight.SemiBold),
-    Font(R.font.barlow_semi_condensed_semibold, FontWeight.Light),
     Font(R.font.barlow_semi_condensed_semibold, FontWeight.Normal),
-    Font(R.font.barlow_semi_condensed_semibold, FontWeight.Normal, FontStyle.Italic),
     Font(R.font.barlow_semi_condensed_semibold, FontWeight.Medium),
-    Font(R.font.barlow_semi_condensed_semibold, FontWeight.Bold)
+    Font(R.font.barlow_semi_condensed_bold, FontWeight.Bold),
+    Font(R.font.barlow_semi_condensed_bold, FontWeight.ExtraBold),
 )
 
 // Set of Material typography styles to start with
