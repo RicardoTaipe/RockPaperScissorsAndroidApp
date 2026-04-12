@@ -2,24 +2,18 @@ package com.example.rockpaperscissorsapp.game
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.rockpaperscissorsapp.MainCoroutineRule
-import com.example.rockpaperscissorsapp.countdown.FakeTimer
-import com.example.rockpaperscissorsapp.countdown.FakeTimer.TypeListener.OnFinish
-import com.example.rockpaperscissorsapp.countdown.FakeTimer.TypeListener.OnTick
-import com.example.rockpaperscissorsapp.countdown.MyCountDownTimer.Companion.ONE_SECOND
-import com.example.rockpaperscissorsapp.data.Choice
-import com.example.rockpaperscissorsapp.data.GameRepository
-import com.example.rockpaperscissorsapp.data.Result
-import com.example.rockpaperscissorsapp.getOrAwaitValue
+import com.example.rockpaperscissorsapp.data.GameResult
+import com.example.rockpaperscissorsapp.data.Move
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -32,79 +26,112 @@ class GameViewModelTest {
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    @Mock
-    lateinit var mockGameRepository: GameRepository
-
-    private lateinit var mockTimer: FakeTimer
-
-    private lateinit var gameViewModel: GameViewModel
-
-    @Before
-    fun setUp() {
-        mockTimer = FakeTimer()
-        gameViewModel = GameViewModel(mockGameRepository, mockTimer)
-    }
-
     @Test
-    fun `GIVEN a choice is saved WHEN playGame is called THEN yourChoice is updated and timer starts`() {
+    fun `GIVEN initial state WHEN nothing happens THEN state should be WaitingForPlayer`() = runTest {
         // GIVEN
-        val testChoice = Choice.ROCK
-        //`when`(mockGameRepository.userChoice).thenReturn(testChoice)
-        // WHEN
-        gameViewModel.playGame()
+        val viewModel = GameViewModel { Move.ROCK }
 
         // THEN
-        assertEquals(testChoice, gameViewModel.yourChoice.getOrAwaitValue())
-        assertTrue(mockTimer.onStartCalled)
+        val state = viewModel.state.value
+        assertTrue(state.game is GameUiState.WaitingForPlayer)
+        assertEquals(0, state.game.score)
+        assertFalse(state.isRulesDialogOpen)
     }
 
     @Test
-    fun `GIVEN game is reset WHEN resetGame is called THEN yourChoice, comChoice, and result are null and timer is canceled`() {
-        // GIVEN: Game is initialized and state is set
-        // WHEN
-        gameViewModel.resetGame()
-
-        // THEN
-        assertNull(gameViewModel.yourChoice.getOrAwaitValue())
-        assertNull(gameViewModel.comChoice.getOrAwaitValue())
-        assertNull(gameViewModel.result.getOrAwaitValue())
-        assertTrue(mockTimer.onCancelCalled)
-    }
-
-    @Test
-    fun `GIVEN a choice is selected WHEN selectOption is called THEN the onFinish listener is triggered and the computer's choice, user and score are set`() {
+    fun `GIVEN game is idle WHEN OpenRules intent is processed THEN isRulesDialogOpen is true`() = runTest {
         // GIVEN
-        val testChoice = Choice.ROCK
-        mockTimer.typeListener = OnFinish
-        //`when`(mockGameRepository.userChoice).thenReturn(testChoice)
-        //`when`(mockGameRepository.getRandomComputerChoice()).thenReturn(Choice.SCISSORS)
-        //`when`(mockGameRepository.play()).thenReturn(Result.WIN)
-        val expectedScore = 1
-        //`when`(mockGameRepository.score).thenReturn(expectedScore)
+        val viewModel = GameViewModel { Move.ROCK }
 
         // WHEN
-        gameViewModel.playGame()
+        viewModel.process(GameIntent.OpenRules)
 
         // THEN
-        assertEquals(Choice.SCISSORS, gameViewModel.comChoice.getOrAwaitValue())
-        assertEquals(testChoice, gameViewModel.yourChoice.getOrAwaitValue())
-        assertEquals(expectedScore.toString(), gameViewModel.score.getOrAwaitValue())
-        assertTrue(mockTimer.onFinishCalled)
+        assertTrue(viewModel.state.value.isRulesDialogOpen)
     }
 
     @Test
-    fun `GIVEN a choice is saved WHEN selectOption is called THEN the onTick listener is triggered and the counter is updated`() {
-        // GIVEN
-        val millisUntilFinished = 2000L
-        val expectedSecondsRemaining = (2000L / ONE_SECOND).inc()
-        mockTimer.typeListener = OnTick(millisUntilFinished)
-        //`when`(mockGameRepository.userChoice).thenReturn(Choice.ROCK)
+    fun `GIVEN player is waiting WHEN Play intent is processed THEN transition to WaitingForOpponent with countdown`() =
+        runTest {
+            // GIVEN
+            val viewModel = GameViewModel { Move.ROCK }
+            val playerMove = Move.PAPER
 
-        // WHEN
-        gameViewModel.playGame()
+            // WHEN
+            viewModel.process(GameIntent.Play(playerMove))
 
-        // THEN
-        assertTrue(mockTimer.onStartCalled)
-        assertEquals(expectedSecondsRemaining.toString(), gameViewModel.counter.getOrAwaitValue())
-    }
+            // THEN
+            val game = viewModel.state.value.game
+            assertTrue(game is GameUiState.WaitingForOpponent)
+            assertEquals(playerMove, (game as GameUiState.WaitingForOpponent).playerMove)
+            assertEquals(3, game.countdown)
+        }
+
+    @Test
+    fun `GIVEN countdown is active WHEN 3 seconds pass THEN game result is generated and score is updated`() =
+        runTest {
+            // GIVEN
+            val opponentMove = Move.SCISSORS
+            val viewModel = GameViewModel { opponentMove } // Opponent always SCISSORS
+            viewModel.process(GameIntent.Play(Move.ROCK)) // Player ROCK (WIN)
+
+            // WHEN
+            advanceTimeBy(3001) // Fast-forward past the 3-second delay
+
+            // THEN
+            val resultState = viewModel.state.value.game
+            assertTrue(resultState is GameUiState.Result)
+            resultState as GameUiState.Result
+            assertEquals(GameResult.WIN, resultState.gameResult)
+            assertEquals(1, resultState.score)
+        }
+
+    @Test
+    fun `GIVEN score is zero WHEN player loses THEN score remains zero and does not go negative`() =
+        runTest {
+            // GIVEN
+            val opponentMove = Move.ROCK
+            val viewModel = GameViewModel { opponentMove }
+            viewModel.process(GameIntent.Play(Move.SCISSORS)) // Player SCISSORS (LOSE)
+
+            // WHEN
+            advanceTimeBy(3001)
+
+            // THEN
+            val resultState = viewModel.state.value.game as GameUiState.Result
+            assertEquals(0, resultState.score)
+        }
+
+    @Test
+    fun `GIVEN game is in result state WHEN NextRound intent is processed THEN state returns to WaitingForPlayer`() =
+        runTest {
+            // GIVEN
+            val viewModel = GameViewModel { Move.ROCK }
+            viewModel.process(GameIntent.Play(Move.ROCK))
+            advanceTimeBy(3001) // Move to Result state
+
+            // WHEN
+            viewModel.process(GameIntent.NextRound)
+
+            // THEN
+            assertTrue(viewModel.state.value.game is GameUiState.WaitingForPlayer)
+            assertNull((viewModel.state.value.game as? GameUiState.WaitingForOpponent)?.playerMove)
+        }
+
+    @Test
+    fun `GIVEN countdown is active WHEN ResetGame intent is processed THEN state is fully reset`() =
+        runTest {
+            // GIVEN
+            val viewModel = GameViewModel { Move.ROCK }
+            viewModel.process(GameIntent.Play(Move.PAPER))
+            advanceTimeBy(1000)
+
+            // WHEN
+            viewModel.process(GameIntent.ResetGame)
+
+            // THEN
+            val state = viewModel.state.value
+            assertTrue(state.game is GameUiState.WaitingForPlayer)
+            assertEquals(0, state.game.score)
+        }
 }
