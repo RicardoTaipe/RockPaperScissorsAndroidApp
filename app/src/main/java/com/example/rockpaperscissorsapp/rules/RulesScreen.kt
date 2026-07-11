@@ -28,44 +28,46 @@ import com.example.rockpaperscissorsapp.ui.theme.MyApplicationTheme
 import com.example.rockpaperscissorsapp.utils.PainterResourceUtil.resolvePainter
 
 @Composable
-fun RulesScreen(onDismissRequest: () -> Unit) {
+fun RulesScreen(modifier: Modifier = Modifier,onDismissRequest: () -> Unit) {
     Dialog(
         onDismissRequest = onDismissRequest
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.White)
-                .padding(32.dp)
-                .safeDrawingPadding()
-                .verticalScroll(rememberScrollState())
-        ) {
+        RulesContent(modifier = modifier) { onDismissRequest() }
+    }
+}
 
-            Text(
-                text = stringResource(id = R.string.rules),
-                style = MaterialTheme.typography.displayMedium,
-                color = DarkTextColor
-            )
+@Composable
+fun RulesContent(modifier: Modifier = Modifier, onDismissRequest: () -> Unit = {}) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceBetween,
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .padding(32.dp)
+            .safeDrawingPadding()
+            .verticalScroll(rememberScrollState())
+    ) {
 
+        Text(
+            text = stringResource(id = R.string.rules),
+            style = MaterialTheme.typography.displayMedium,
+            color = DarkTextColor
+        )
 
-            Image(
-                painter = resolvePainter(id = R.drawable.image_rules),
-                contentDescription = stringResource(id = R.string.rules_image),
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxWidth()
+        Image(
+            painter = resolvePainter(id = R.drawable.image_rules),
+            contentDescription = stringResource(id = R.string.rules_image),
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxWidth()
 
-            )
+        )
 
-
-            Image(
-                painter = resolvePainter(id = R.drawable.icon_close),
-                contentDescription = stringResource(id = R.string.close_button),
-                modifier = Modifier
-                    .clickable(onClick = onDismissRequest)
-            )
-        }
+        Image(
+            painter = resolvePainter(id = R.drawable.icon_close),
+            contentDescription = stringResource(id = R.string.close_button),
+            modifier = Modifier.clickable(onClick = onDismissRequest)
+        )
     }
 }
 
@@ -73,6 +75,6 @@ fun RulesScreen(onDismissRequest: () -> Unit) {
 @Composable
 private fun RulesScreenPreview() {
     MyApplicationTheme {
-        RulesScreen {}
+        RulesContent()
     }
 }
