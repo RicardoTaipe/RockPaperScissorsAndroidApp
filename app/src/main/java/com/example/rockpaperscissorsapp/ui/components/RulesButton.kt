@@ -21,10 +21,10 @@ import com.example.rockpaperscissorsapp.ui.theme.MyApplicationTheme
 import com.example.rockpaperscissorsapp.ui.theme.RulesButtonTextColor
 
 @Composable
-fun RulesButton(onClick: () -> Unit) {
+fun RulesButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
     Button(
         onClick = onClick,
-        modifier = Modifier
+        modifier = modifier
             .width(160.dp)
             .height(50.dp)
             .border(2.dp, BorderColor, RoundedCornerShape(8.dp)),

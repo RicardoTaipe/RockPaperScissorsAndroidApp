@@ -1,15 +1,23 @@
 package com.example.rockpaperscissorsapp
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -60,46 +68,50 @@ fun RockPaperScissorsContent(
     Scaffold(
         modifier = modifier,
         topBar = {
-            Row(Modifier.padding(horizontal = 24.dp, vertical = 32.dp)) {
-                Header(score = uiState.game.score.toString())
-            }
+            Header(
+                modifier = Modifier.padding(horizontal = 24.dp, vertical = 32.dp),
+                score = uiState.game.score.toString()
+            )
         },
         bottomBar = {
             Row(
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .safeDrawingPadding()
+                    .navigationBarsPadding()
                     .padding(horizontal = 24.dp, vertical = 32.dp)
             ) {
                 RulesButton { intent(GameIntent.OpenRules) }
             }
-        }
+        },
     ) { innerPadding ->
         Box(
             modifier = Modifier
                 .background(brush = largeRadialGradient)
+                .padding(innerPadding)
                 .fillMaxSize()
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(innerPadding),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-
-                when (uiState.game) {
-                    is GameUiState.WaitingForPlayer -> PlayGameScreen { intent(GameIntent.Play(move = it)) }
-                    is GameUiState.WaitingForOpponent -> GameScreen(uiState = uiState.game)
-                    is GameUiState.Result -> ResultScreen(uiState = uiState.game) {
-                        intent(
-                            GameIntent.NextRound
-                        )
+            AnimatedContent(
+                targetState = uiState.game,
+                contentKey = {
+                    when (it) {
+                        is GameUiState.WaitingForPlayer -> "play"
+                        is GameUiState.WaitingForOpponent -> "waiting"
+                        is GameUiState.Result -> "result"
                     }
                 }
-
-                if (uiState.isRulesDialogOpen) {
-                    RulesScreen { intent(GameIntent.CloseRules) }
+            ) { gameState ->
+                when (gameState) {
+                    is GameUiState.WaitingForPlayer -> PlayGameScreen { intent(GameIntent.Play(move = it)) }
+                    is GameUiState.WaitingForOpponent -> GameScreen(uiState = gameState)
+                    is GameUiState.Result -> ResultScreen(uiState = gameState) {
+                        intent(GameIntent.NextRound)
+                    }
                 }
+            }
+
+            if (uiState.isRulesDialogOpen) {
+                RulesScreen { intent(GameIntent.CloseRules) }
             }
         }
     }
