@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 private const val ONE_SECOND = 1000L
 private const val COUNTDOWN_START = 3
@@ -91,7 +92,7 @@ class GameViewModel(private val randomGenerator: () -> Move) : ViewModel() {
                         current
                     }
                 }
-                delay(ONE_SECOND)
+                delay(ONE_SECOND.milliseconds)
             }
             generateOpponentMove()
         }

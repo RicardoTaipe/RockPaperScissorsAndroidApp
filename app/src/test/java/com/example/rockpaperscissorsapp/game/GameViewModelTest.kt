@@ -15,6 +15,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
@@ -51,6 +52,18 @@ class GameViewModelTest {
     }
 
     @Test
+    fun `GIVEN game is idle WHEN OpenRules intent is processed THEN isRulesDialogOpen is false`() = runTest {
+        // GIVEN
+        val viewModel = GameViewModel { Move.ROCK }
+
+        // WHEN
+        viewModel.process(GameIntent.CloseRules)
+
+        // THEN
+        assertFalse(viewModel.state.value.isRulesDialogOpen)
+    }
+
+    @Test
     fun `GIVEN player is waiting WHEN Play intent is processed THEN transition to WaitingForOpponent with countdown`() =
         runTest {
             // GIVEN
@@ -76,7 +89,7 @@ class GameViewModelTest {
             viewModel.process(GameIntent.Play(Move.ROCK)) // Player ROCK (WIN)
 
             // WHEN
-            advanceTimeBy(3001) // Fast-forward past the 3-second delay
+            advanceTimeBy(3001.milliseconds) // Fast-forward past the 3-second delay
 
             // THEN
             val resultState = viewModel.state.value.game
@@ -95,7 +108,7 @@ class GameViewModelTest {
             viewModel.process(GameIntent.Play(Move.SCISSORS)) // Player SCISSORS (LOSE)
 
             // WHEN
-            advanceTimeBy(3001)
+            advanceTimeBy(3001.milliseconds)
 
             // THEN
             val resultState = viewModel.state.value.game as GameUiState.Result
@@ -108,7 +121,7 @@ class GameViewModelTest {
             // GIVEN
             val viewModel = GameViewModel { Move.ROCK }
             viewModel.process(GameIntent.Play(Move.ROCK))
-            advanceTimeBy(3001) // Move to Result state
+            advanceTimeBy(3001.milliseconds) // Move to Result state
 
             // WHEN
             viewModel.process(GameIntent.NextRound)
@@ -124,14 +137,13 @@ class GameViewModelTest {
             // GIVEN
             val viewModel = GameViewModel { Move.ROCK }
             viewModel.process(GameIntent.Play(Move.PAPER))
-            advanceTimeBy(1000)
+            advanceTimeBy(1000.milliseconds)
 
             // WHEN
             viewModel.process(GameIntent.ResetGame)
 
             // THEN
             val state = viewModel.state.value
-            assertTrue(state.game is GameUiState.WaitingForPlayer)
-            assertEquals(0, state.game.score)
+            assertEquals(GameUiState.WaitingForPlayer(0), state.game)
         }
 }
